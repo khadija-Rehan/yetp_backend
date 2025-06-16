@@ -8,6 +8,6 @@ const router = express.Router();
 router.use(authMiddleware);
 
 // PDF generation route
-router.post('/generate-pdf', generateAndSendPDF);
+router.get('/generate-pdf', generateAndSendPDF);
 
 module.exports = router; 

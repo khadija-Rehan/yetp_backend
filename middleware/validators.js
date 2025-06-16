@@ -91,7 +91,7 @@ const signupValidation = [
     .notEmpty()
     .withMessage("Permanent address is required"),
 
-  body("currentAddress").notEmpty().withMessage("Current address is required"),
+  body("permanentAddress").notEmpty().withMessage("Permanent address is required"),
 
   body("city").notEmpty().withMessage("City is required"),
 
@@ -108,7 +108,7 @@ const signupValidation = [
   }),
 
   body("document").custom((value, { req }) => {
-    if (!req.files || !req.files["residencyDocument"]) {
+    if (!req.files || !req.files["cnicDocument"]) {
       throw new Error("Document is required");
     }
     return true;

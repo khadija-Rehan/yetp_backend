@@ -7,7 +7,7 @@ const router = express.Router();
 
 const uploadFields = upload.fields([
   { name: 'degreeDocument', maxCount: 1 },
-  { name: 'residencyDocument', maxCount: 1 }
+  { name: 'cnicDocument', maxCount: 1 }
 ]);
 
 router.post('/signup', uploadFields, signupValidation, signup);

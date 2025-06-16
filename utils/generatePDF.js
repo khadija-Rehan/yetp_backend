@@ -10,7 +10,7 @@ const PDFDocument = require("pdfkit");
 const generatePDF = async (userData, amount) => {
   // return new Promise((resolve, reject) => {
     try {
-      const uploadsDir = path.join(__dirname, "uploads");
+      const uploadsDir = path.join(__dirname, "../uploads");
       if (!fs.existsSync(uploadsDir)) {
         fs.mkdirSync(uploadsDir, { recursive: true });
       }

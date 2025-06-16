@@ -52,3 +52,13 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
 app.use('/api/bank', bankRoutes); 
+
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// app.use(express.static(path.join(__dirname, 'client/build')));
+
+// // // All other GET requests (for React routes)
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+// });

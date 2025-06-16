@@ -26,23 +26,34 @@ exports.signup = async (req, res) => {
       courses,
       internetAccess,
       permanentAddress,
-      currentAddress,
       city,
       employmentStatus,
     } = req.body;
 
     // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+
+    const existingCnic = await User.findOne({ cnic });
+    if (existingCnic) {
+      return res.status(400).json({ message: "CNIC already registered" });
+    }
+
+    const existingMobile = await User.findOne({ mobile });
+    if (existingMobile) {
+      return res
+        .status(400)
+        .json({ message: "Mobile number already registered" });
     }
 
     // Get file URLs from uploaded files
     const lastDegreeUrl = req.files["degreeDocument"]
       ? `/uploads/${req.files["degreeDocument"][0].filename}`
       : null;
-    const documentUrl = req.files["residencyDocument"]
-      ? `/uploads/${req.files["residencyDocument"][0].filename}`
+    const documentUrl = req.files["cnicDocument"]
+      ? `/uploads/${req.files["cnicDocument"][0].filename}`
       : null;
 
     if (!lastDegreeUrl || !documentUrl) {
@@ -70,7 +81,6 @@ exports.signup = async (req, res) => {
       courses,
       internetAccess,
       permanentAddress,
-      currentAddress,
       city,
       employmentStatus,
       document: documentUrl,

@@ -6,8 +6,10 @@ const Challan = require("../models/Challan");
 
 exports.generateAndSendPDF = async (req, res) => {
   try {
-    const { amount } = req.body;
+    // const { amount } = req.body;
     const user = req.user;
+
+    const amount = 1000;
 
     const { filePath, fileName, challanNumber } = await generatePDF(
       user,
@@ -44,10 +46,16 @@ exports.generateAndSendPDF = async (req, res) => {
     console.log("pdfBuffer", pdfBuffer);
 
     return res.status(200).json({
-      message: "Challan Created successfully",
-      status: "success",
-      data: { pdfBuffer },
+      status: 'success',
+      message: 'PDF generated successfully',
+      data: { fileName }, // Only send this
     });
+
+    // return res.status(200).json({
+    //   message: "Challan Created successfully",
+    //   status: "success",
+    //   data: { pdfBuffer },
+    // });
   } catch (error) {
     console.error("PDF generation error:", error);
     res.status(500).json({ message: error.message });
