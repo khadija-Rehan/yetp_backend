@@ -11,6 +11,11 @@ const config = require('./config/config');
 const app = express();
 const PORT = config.port;
 
+
+
+console.log("PORT",PORT);
+
+
 // // CORS configuration
 // const corsOptions = {
 //   origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*',

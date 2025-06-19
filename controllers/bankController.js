@@ -5,7 +5,7 @@ exports.inquery = async (req, res) => {
   try {
     const { challanId } = req.body;
 
-    const challan = await Challan.findOne({ challanId });
+    const challan = await Challan.findOne({ challanId }).select('-path');
 
     if (!challan) {
       return res.status(404).json({
@@ -46,7 +46,7 @@ exports.postPay = async (req, res) => {
   try {
     const { challanId, txnId, amount, branchCode, txnDate } = req.body;
 
-    const challan = await Challan.findOne({ challanId });
+    const challan = await Challan.findOne({ challanId }).select('-path');
 
     if (!challan) {
       return res.status(400).json({
