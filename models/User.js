@@ -36,10 +36,10 @@ const userSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    maritalStatus: {
-      type: String,
-      required: true,
-    },
+    // maritalStatus: {
+    //   type: String,
+    //   required: true,
+    // },
     gender: {
       type: String,
       required: true,
@@ -48,19 +48,19 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    fieldOfStudy: {
-      type: String,
-      required: true,
-    },
-    institute: {
-      type: String,
-      required: true,
-    },
-    yearOfCompletion: {
-      type: Number,
-      required: true,
-    },
-    lastDegree: {
+    // fieldOfStudy: {
+    //   type: String,
+    //   required: true,
+    // },
+    // institute: {
+    //   type: String,
+    //   required: true,
+    // },
+    // yearOfCompletion: {
+    //   type: Number,
+    //   required: true,
+    // },
+    cnicBack: {
       type: String, // URL to the uploaded file
       required: true,
     },
@@ -68,10 +68,10 @@ const userSchema = new mongoose.Schema(
       type: [String],
       required: true,
     },
-    internetAccess: {
-      type: Boolean,
-      required: true,
-    },
+    // internetAccess: {
+    //   type: Boolean,
+    //   required: true,
+    // },
     permanentAddress: {
       type: String,
       required: true,
@@ -80,13 +80,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    employmentStatus: {
-      type: Boolean,
-      required: true,
-    },
-    document: {
+    // employmentStatus: {
+    //   type: Boolean,
+    //   required: true,
+    // },
+    cnicFront: {
       type: String, // URL to the uploaded file
       required: true,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+    verifyToken: {
+      type: String,
+      default: "",
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,

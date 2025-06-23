@@ -50,11 +50,11 @@ const signupValidation = [
     .isDate({ format: "YYYY-MM-DD" })
     .withMessage("Date must be in YYYY-MM-DD format"),
 
-  body("maritalStatus")
-    .notEmpty()
-    .withMessage("Marital status is required")
-    .isIn(["single", "married"])
-    .withMessage("Invalid marital status"),
+  // body("maritalStatus")
+  //   .notEmpty()
+  //   .withMessage("Marital status is required")
+  //   .isIn(["single", "married"])
+  //   .withMessage("Invalid marital status"),
 
   body("gender")
     .notEmpty()
@@ -62,15 +62,15 @@ const signupValidation = [
     .isIn(["male", "female"])
     .withMessage("Invalid gender"),
 
-  body("qualification").notEmpty().withMessage("Qualification is required"),
+  // body("qualification").notEmpty().withMessage("Qualification is required"),
 
-  body("institute").notEmpty().withMessage("Institute name is required"),
+  // body("institute").notEmpty().withMessage("Institute name is required"),
 
-  body("yearOfCompletion")
-    .notEmpty()
-    .withMessage("Year of completion is required")
-    .isInt({ min: 1900, max: new Date().getFullYear() })
-    .withMessage("Invalid year of completion"),
+  // body("yearOfCompletion")
+  //   .notEmpty()
+  //   .withMessage("Year of completion is required")
+  //   .isInt({ min: 1900, max: new Date().getFullYear() })
+  //   .withMessage("Invalid year of completion"),
 
   body("courses")
     .customSanitizer((value) => {
@@ -87,28 +87,28 @@ const signupValidation = [
     )
     .withMessage("Each course must be a non-empty string"),
 
-  body("internetAccess")
-    .notEmpty()
-    .withMessage("Permanent address is required"),
+  // body("internetAccess")
+  //   .notEmpty()
+  //   .withMessage("Permanent address is required"),
 
   body("permanentAddress").notEmpty().withMessage("Permanent address is required"),
 
   body("city").notEmpty().withMessage("City is required"),
 
-  body("employmentStatus")
-    .isBoolean()
-    .withMessage("Employed must be a boolean value"),
+  // body("employmentStatus")
+  //   .isBoolean()
+  //   .withMessage("Employed must be a boolean value"),
 
   // Add file validation
-  body("lastDegree").custom((value, { req }) => {
-    if (!req.files || !req.files["degreeDocument"]) {
+  body("cnicFront").custom((value, { req }) => {
+    if (!req.files || !req.files["cnicFront"]) {
       throw new Error("Last degree document is required");
     }
     return true;
   }),
 
-  body("document").custom((value, { req }) => {
-    if (!req.files || !req.files["cnicDocument"]) {
+  body("cnicBack").custom((value, { req }) => {
+    if (!req.files || !req.files["cnicBack"]) {
       throw new Error("Document is required");
     }
     return true;

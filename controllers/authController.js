@@ -7,6 +7,7 @@ const sendEmail = require("../utils/sendEmail");
 // Signup function
 exports.signup = async (req, res) => {
   try {
+    // console.log('Files:', req.files);
     console.log(req.body);
 
     const {
@@ -17,17 +18,17 @@ exports.signup = async (req, res) => {
       cnic,
       mobile,
       dateOfBirth,
-      maritalStatus,
+      // maritalStatus,
       gender,
       qualification,
-      fieldOfStudy,
-      institute,
-      yearOfCompletion,
+      // fieldOfStudy,
+      // institute,
+      // yearOfCompletion,
       courses,
-      internetAccess,
+      // internetAccess,
       permanentAddress,
       city,
-      employmentStatus,
+      // employmentStatus,
     } = req.body;
 
     // Check if user already exists
@@ -49,17 +50,17 @@ exports.signup = async (req, res) => {
     }
 
     // Get file URLs from uploaded files
-    const lastDegreeUrl = req.files["degreeDocument"]
-      ? `/uploads/${req.files["degreeDocument"][0].filename}`
+    const cnicFront = req.files["cnicFront"]
+      ? `/uploads/${req.files["cnicFront"][0].filename}`
       : null;
-    const documentUrl = req.files["cnicDocument"]
-      ? `/uploads/${req.files["cnicDocument"][0].filename}`
+    const cnicBack = req.files["cnicBack"]
+      ? `/uploads/${req.files["cnicBack"][0].filename}`
       : null;
 
-    if (!lastDegreeUrl || !documentUrl) {
+    if (!cnicFront || !cnicBack) {
       return res
         .status(400)
-        .json({ message: "Both lastDegree and document files are required" });
+        .json({ message: "Both cnicFront and cnicBack files are required" });
     }
 
     // Create new user with all fields
@@ -71,25 +72,42 @@ exports.signup = async (req, res) => {
       cnic,
       mobile,
       dateOfBirth,
-      maritalStatus,
+      // maritalStatus,
       gender,
       qualification,
-      institute,
-      yearOfCompletion,
-      fieldOfStudy,
-      lastDegree: lastDegreeUrl,
+      // institute,
+      // yearOfCompletion,
+      // fieldOfStudy,
+      cnicFront,
       courses,
-      internetAccess,
+      // internetAccess,
       permanentAddress,
       city,
-      employmentStatus,
-      document: documentUrl,
+      // employmentStatus,
+      cnicBack,
     });
+
+    // Generate verification token
+    const verifyToken = crypto.randomBytes(32).toString("hex");
+    user.verifyToken = verifyToken;
+    user.isVerified = false;
 
     await user.save();
 
+    // Send verification email
+    const verifyUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/api/auth/verify-email?token=${verifyToken}`;
+    const message = `Please verify your email by clicking the following link: ${verifyUrl}`;
+    await sendEmail({
+      email: user.email,
+      subject: "Verify your email",
+      message,
+    });
+
     res.status(201).json({
-      message: "User created successfully",
+      message:
+        "User created successfully. Please check your email to verify your account.",
       user: {
         email: user.email,
         fullName: user.fullName,
@@ -112,12 +130,20 @@ exports.login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    if (!user.isVerified) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "User email is not verified. Check you email for verification link",
+        });
+    }
+
     const isMatch = await user.comparePassword(password);
 
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-
     // Generate JWT token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
@@ -209,5 +235,31 @@ exports.resetPassword = async (req, res) => {
     res.status(200).json({ message: "Password reset successful" });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+// Email verification function
+exports.verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.query;
+    if (!token) {
+      return res
+        .status(400)
+        .json({ message: "Verification token is required" });
+    }
+    const user = await User.findOne({ verifyToken: token });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "Invalid or expired verification token" });
+    }
+    user.isVerified = true;
+    user.verifyToken = "";
+    await user.save();
+    return res
+      .status(200)
+      .json({ message: "Email verified successfully. You can now log in." });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 };
