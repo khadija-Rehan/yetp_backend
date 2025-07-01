@@ -21,20 +21,22 @@ exports.inquery = async (req, res) => {
       });
     }
 
+    const user = await User.findById(challan.userId);
 
     if (challan.paid) {
       return res.status(402).json({
         message: "Challan is already paid",
         status: "failed",
         responseCode: 204,
-        challanId: null,
         amount: null,
-        branchCode: null,
-        txnId: null,
+        challanId: null,
+        fullName: null,
+        cnic: null,
+        mobile: null,
+        fatherName: null,
       });
     }
 
-    const user = await User.findById(challan.userId);
 
     if (!user) {
       return res.status(404).json({
