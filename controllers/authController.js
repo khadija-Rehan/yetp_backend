@@ -131,12 +131,10 @@ exports.login = async (req, res) => {
     }
 
     if (!user.isVerified) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "User email is not verified. Check you email for verification link",
-        });
+      return res.status(400).json({
+        message:
+          "User email is not verified. Check you email for verification link",
+      });
     }
 
     const isMatch = await user.comparePassword(password);
@@ -256,9 +254,8 @@ exports.verifyEmail = async (req, res) => {
     user.isVerified = true;
     user.verifyToken = "";
     await user.save();
-    return res
-      .status(200)
-      .json({ message: "Email verified successfully. You can now log in." });
+
+    return res.redirect("https://hunarmandpunjab.pk/login");
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
