@@ -12,6 +12,25 @@ exports.inquery = async (req, res) => {
         message: "Challan not found",
         status: "failed",
         responseCode: 201,
+        amount: null,
+        challanId: null,
+        fullName: null,
+        cnic: null,
+        mobile: null,
+        fatherName: null,
+      });
+    }
+
+
+    if (challan.paid) {
+      return res.status(402).json({
+        message: "Challan is already paid",
+        status: "failed",
+        responseCode: 204,
+        challanId: null,
+        amount: null,
+        branchCode: null,
+        txnId: null,
       });
     }
 
@@ -22,6 +41,12 @@ exports.inquery = async (req, res) => {
         message: "User not found",
         status: "failed",
         responseCode: 202,
+        amount: null,
+        challanId: null,
+        fullName: null,
+        cnic: null,
+        mobile: null,
+        fatherName: null,
       });
     }
 
@@ -29,6 +54,7 @@ exports.inquery = async (req, res) => {
       message: "Challan found successfully",
       status: "success",
       responseCode: 200,
+      amount: challan.amount,
       challanId: challan.challanId,
       fullName: user.fullName,
       cnic: user.cnic,
@@ -37,9 +63,17 @@ exports.inquery = async (req, res) => {
     });
   } catch (error) {
     console.error("inquery error:", error);
-    res
-      .status(500)
-      .json({ message: error.message, status: "failed", responseCode: 203 });
+    res.status(500).json({
+      message: error.message,
+      status: "failed",
+      responseCode: 203,
+      amount: null,
+      challanId: null,
+      fullName: null,
+      cnic: null,
+      mobile: null,
+      fatherName: null,
+    });
   }
 };
 
@@ -54,6 +88,10 @@ exports.postPay = async (req, res) => {
         message: "Challan not found",
         status: "failed",
         responseCode: 201,
+        challanId: null,
+        amount: null,
+        branchCode: null,
+        txnId: null,
       });
     }
 
@@ -62,6 +100,10 @@ exports.postPay = async (req, res) => {
         message: "Challan is already paid",
         status: "failed",
         responseCode: 204,
+        challanId: null,
+        amount: null,
+        branchCode: null,
+        txnId: null,
       });
     }
     if (challan.amount !== amount) {
@@ -69,6 +111,10 @@ exports.postPay = async (req, res) => {
         message: "Amount does not match with challan amount",
         status: "failed",
         responseCode: 205,
+        challanId: null,
+        amount: null,
+        branchCode: null,
+        txnId: null,
       });
     }
 
@@ -89,8 +135,14 @@ exports.postPay = async (req, res) => {
     });
   } catch (error) {
     console.error("postPay error:", error);
-    res
-      .status(500)
-      .json({ message: error.message, status: "failed", responseCode: 203 });
+    res.status(500).json({
+      message: error.message,
+      status: "failed",
+      responseCode: 203,
+      challanId: null,
+      amount: null,
+      branchCode: null,
+      txnId: null,
+    });
   }
 };
