@@ -8,7 +8,7 @@ exports.inquery = async (req, res) => {
     const challan = await Challan.findOne({ challanId }).select("-path");
 
     if (!challan) {
-      return res.status(404).json({
+      return res.status(200).json({
         message: "Challan not found",
         status: "failed",
         responseCode: 201,
@@ -56,7 +56,7 @@ exports.inquery = async (req, res) => {
       message: "Challan found successfully",
       status: "success",
       responseCode: 200,
-      amount: challan.amount,
+      amount: challan.amount.toString(),
       challanId: challan.challanId,
       fullName: user.fullName,
       cnic: user.cnic,
@@ -86,7 +86,7 @@ exports.postPay = async (req, res) => {
     const challan = await Challan.findOne({ challanId }).select("-path");
 
     if (!challan) {
-      return res.status(400).json({
+      return res.status(200).json({
         message: "Challan not found",
         status: "failed",
         responseCode: 201,
@@ -108,7 +108,7 @@ exports.postPay = async (req, res) => {
         txnId: null,
       });
     }
-    if (challan.amount !== amount) {
+    if (challan.amount.toString() !== amount) {
       return res.status(401).json({
         message: "Amount does not match with challan amount",
         status: "failed",
@@ -131,7 +131,7 @@ exports.postPay = async (req, res) => {
       status: "success",
       code: 200,
       challanId: challan.challanId,
-      amount: challan.amount,
+      amount: challan.amount.toString(),
       branchCode: challan.branchCode,
       txnId: challan.txnId,
     });

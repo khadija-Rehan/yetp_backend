@@ -38,10 +38,11 @@ const validatePostPay = [
     body('amount')
         .notEmpty()
         .withMessage('Amount is required')
-        .isNumeric()
-        .withMessage('Amount must be a number')
-        .custom((value) => value > 0)
-        .withMessage('Amount must be greater than 0'),
+        .isString()
+        .withMessage('Amount must be a string')
+        .trim()
+        .custom((value) => !isNaN(value) && Number(value) > 0)
+        .withMessage('Amount must be a numeric string greater than 0'),
     
     body('branchCode')
         .notEmpty()
