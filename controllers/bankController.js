@@ -24,7 +24,7 @@ exports.inquery = async (req, res) => {
     const user = await User.findById(challan.userId);
 
     if (challan.paid) {
-      return res.status(402).json({
+      return res.status(200).json({
         message: "Challan is already paid",
         status: "failed",
         responseCode: 204,
@@ -39,7 +39,7 @@ exports.inquery = async (req, res) => {
 
 
     if (!user) {
-      return res.status(404).json({
+      return res.status(200).json({
         message: "User not found",
         status: "failed",
         responseCode: 202,
@@ -65,7 +65,7 @@ exports.inquery = async (req, res) => {
     });
   } catch (error) {
     console.error("inquery error:", error);
-    res.status(500).json({
+    res.status(200).json({
       message: error.message,
       status: "failed",
       responseCode: 203,
@@ -98,7 +98,7 @@ exports.postPay = async (req, res) => {
     }
 
     if (challan.paid) {
-      return res.status(402).json({
+      return res.status(200).json({
         message: "Challan is already paid",
         status: "failed",
         responseCode: 204,
@@ -109,7 +109,7 @@ exports.postPay = async (req, res) => {
       });
     }
     if (challan.amount.toString() !== amount) {
-      return res.status(401).json({
+      return res.status(200).json({
         message: "Amount does not match with challan amount",
         status: "failed",
         responseCode: 205,
@@ -137,7 +137,7 @@ exports.postPay = async (req, res) => {
     });
   } catch (error) {
     console.error("postPay error:", error);
-    res.status(500).json({
+    res.status(200).json({
       message: error.message,
       status: "failed",
       responseCode: 203,
