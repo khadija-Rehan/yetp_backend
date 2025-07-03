@@ -6,10 +6,15 @@ const Challan = require("../models/Challan");
 
 exports.generateAndSendPDF = async (req, res) => {
   try {
-    // const { amount } = req.body;
+    const { amount } = req.body;
     const user = req.user;
 
-    const amount = 1000;
+
+
+    console.log('amount', amount);
+    
+
+    // const amount = 1000;
 
     const { filePath, fileName, challanNumber } = await generatePDF(
       user,
