@@ -8,12 +8,16 @@ const { PDFDocument, StandardFonts, rgb } = require("pdf-lib");
  * @param {number} amount
  * @returns {Promise<{filePath: string, fileName: string, challanNumber: string}>}
  */
-const generatePDF = async (userData, amount) => {
+const generatePDF = async (userData, amount, userCourses) => {
   try {
     const uploadsDir = path.join(__dirname, "../uploads");
     if (!fs.existsSync(uploadsDir)) {
       fs.mkdirSync(uploadsDir, { recursive: true });
     }
+
+
+    console.log("userCourses", userCourses);
+    
 
     const challanNumber = Date.now().toString().slice(-8);
     const fileName = `challan-${challanNumber}.pdf`;
@@ -41,8 +45,18 @@ const generatePDF = async (userData, amount) => {
       page.drawText(userData.fatherName, { x: xOffset + 60, y: yOffset + 80, size: 10, font, color });
       page.drawText(userData.mobile, { x: xOffset + 60, y: yOffset + 60 , size: 10, font, color });
       page.drawText(userData.email || "-", { x: xOffset + 60, y: yOffset + 35, size: 10, font, color });
-      page.drawText(`Rs. ${amount}`, { x: xOffset + 150, y: yOffset - 132, size: 10, font, color }); // Amount
+
+      // Draw each course, adjusting y for each
+      const courseStartY = yOffset - 80;
+      const courseGap = 15; // vertical gap between courses
+      (userCourses && userCourses.length > 0 ? userCourses : ["-"]).forEach((course, idx) => {
+        const courseY = courseStartY - idx * courseGap;
+        page.drawText(course, { x: xOffset + 7, y: courseY, size: 6, font, color });
+        page.drawText('1000', { x: xOffset + 170, y: courseY, size: 6, font, color });
+      });
+      page.drawText(`Rs. ${amount}`, { x: xOffset + 150, y: yOffset - 132, size: 10, font, color });
     });
+
 
     const pdfBytes = await pdfDoc.save();
     fs.writeFileSync(filePath, pdfBytes);
