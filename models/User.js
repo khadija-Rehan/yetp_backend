@@ -4,6 +4,11 @@ const crypto = require("crypto");
 
 const userSchema = new mongoose.Schema(
   {
+    rollNumber: {
+      type: String,
+      unique: true,
+      required: true,
+    },
     email: {
       type: String,
       required: true,
@@ -104,6 +109,27 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Generate unique roll number
+userSchema.statics.generateRollNumber = async function () {
+  let rollNumber;
+  let isUnique = false;
+  
+  while (!isUnique) {
+    // Generate roll number with format: HM-YYYY-XXXX (HM for Hunarmand, YYYY for year, XXXX for sequential number)
+    const year = new Date().getFullYear();
+    const randomNum = Math.floor(Math.random() * 9000) + 1000; // 4-digit random number
+    rollNumber = `HM-${year}-${randomNum}`;
+    
+    // Check if this roll number already exists
+    const existingUser = await this.findOne({ rollNumber });
+    if (!existingUser) {
+      isUnique = true;
+    }
+  }
+  
+  return rollNumber;
+};
 
 // Hash the password before saving
 userSchema.pre("save", async function (next) {

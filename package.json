@@ -5,7 +5,9 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "migrate:rollnumbers": "node utils/migrateRollNumbers.js",
+    "test:rollnumbers": "node utils/testRollNumber.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

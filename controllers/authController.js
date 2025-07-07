@@ -63,8 +63,12 @@ exports.signup = async (req, res) => {
         .json({ message: "Both cnicFront and cnicBack files are required" });
     }
 
+    // Generate unique roll number
+    const rollNumber = await User.generateRollNumber();
+
     // Create new user with all fields
     const user = new User({
+      rollNumber,
       email,
       password, // Password will be hashed by the pre-save middleware
       fullName,
@@ -105,10 +109,13 @@ exports.signup = async (req, res) => {
       message,
     });
 
+    console.log(verifyUrl);
+
     res.status(201).json({
       message:
         "User created successfully. Please check your email to verify your account.",
       user: {
+        rollNumber: user.rollNumber,
         email: user.email,
         fullName: user.fullName,
         // Don't send sensitive information
@@ -153,8 +160,10 @@ exports.login = async (req, res) => {
       message: "Logged in successfully",
       token,
       user: {
+        rollNumber: user.rollNumber,
         email: user.email,
         fullName: user.fullName,
+        rollNumber: user.rollNumber,
       },
     });
   } catch (error) {

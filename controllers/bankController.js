@@ -62,6 +62,7 @@ exports.inquery = async (req, res) => {
       cnic: user.cnic,
       mobile: user.mobile,
       fatherName: user.fatherName,
+      rollNumber: user.rollNumber,
     });
   } catch (error) {
     console.error("inquery error:", error);

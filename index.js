@@ -6,6 +6,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const bankRoutes = require('./routes/bankRoutes')
+const scholarshipRoutes = require('./routes/scholarshipRoutes');
 const config = require('./config/config');
 
 const app = express();
@@ -61,6 +62,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
 app.use('/api/bank', bankRoutes); 
+app.use('/api/scholarship', scholarshipRoutes);
 
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
