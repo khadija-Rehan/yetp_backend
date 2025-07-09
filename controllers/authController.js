@@ -3,6 +3,9 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const sendEmail = require("../utils/sendEmail");
+const Challan = require("../models/Challan");
+const getEmailVerificationHtml = require("../emailTemplates/getEmailVerificationHtml");
+const getUserLoginEmailHtml = require("../emailTemplates/getUserLoginEmailHtml");
 
 // Signup function
 exports.signup = async (req, res) => {
@@ -24,11 +27,13 @@ exports.signup = async (req, res) => {
       // fieldOfStudy,
       // institute,
       // yearOfCompletion,
-      courses,
       // internetAccess,
       permanentAddress,
       city,
       // employmentStatus,
+      firstCourse,
+      secondCourse,
+      referralCode,
     } = req.body;
 
     // Check if user already exists
@@ -49,6 +54,13 @@ exports.signup = async (req, res) => {
         .json({ message: "Mobile number already registered" });
     }
 
+    // Validate required fields
+    if (!firstCourse || !secondCourse) {
+      return res.status(400).json({
+        message: "firstCourse and secondCourse are required fields",
+      });
+    }
+
     // Get file URLs from uploaded files
     const cnicFront = req.files["cnicFront"]
       ? `/uploads/${req.files["cnicFront"][0].filename}`
@@ -65,6 +77,9 @@ exports.signup = async (req, res) => {
 
     // Generate unique roll number
     const rollNumber = await User.generateRollNumber();
+
+    // Make courses array of string
+    const courses = [firstCourse, secondCourse];
 
     // Create new user with all fields
     const user = new User({
@@ -89,6 +104,7 @@ exports.signup = async (req, res) => {
       city,
       // employmentStatus,
       cnicBack,
+      referralCode,
     });
 
     // Generate verification token
@@ -118,6 +134,8 @@ exports.signup = async (req, res) => {
         rollNumber: user.rollNumber,
         email: user.email,
         fullName: user.fullName,
+        courses: user.courses,
+        referralCode: user.referralCode,
         // Don't send sensitive information
       },
     });
@@ -149,12 +167,33 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
+
+    // Get challan data for this user
+    let challanData = null;
+    try {
+      challanData = await Challan.find({ userId: user._id });
+    } catch (err) {
+      console.error("Error fetching challan data:", err);
+      challanData = [];
+    }
+
     // Generate JWT token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
+
+    const html = getUserLoginEmailHtml({
+      userName: user.fullName,
+      loginTime: new Date().toLocaleString(),
+    });
+
+      await sendEmail({
+      email: user.email,
+      subject: "Welcome back to Hunarmand!",
+      html: html,
+    });
 
     res.status(200).json({
       message: "Logged in successfully",
@@ -164,7 +203,9 @@ exports.login = async (req, res) => {
         email: user.email,
         fullName: user.fullName,
         rollNumber: user.rollNumber,
+        testPassed: user.testPassed,
       },
+      challan: challanData,
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -256,13 +297,25 @@ exports.verifyEmail = async (req, res) => {
     }
     const user = await User.findOne({ verifyToken: token });
     if (!user) {
-      return res
+      return res  
         .status(400)
         .json({ message: "Invalid or expired verification token" });
     }
     user.isVerified = true;
     user.verifyToken = "";
     await user.save();
+
+    const html = getEmailVerificationHtml({
+      userName: user.fullName,
+      verifyLink: verifyUrl,
+      bannerUrl: "https://hunarmandpunjab.pk/images/banner.png",
+    });
+
+    await sendEmail({
+      email: user.email,
+      subject: "Email Verified Successfully!",
+      html: html,
+    });
 
     return res.redirect("https://hunarmandpunjab.pk/login");
   } catch (error) {

@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const scholarshipSchema = new mongoose.Schema(
   {
+    userId: {
+      type: String,
+      required: true,
+    },
     fullName: {
       type: String,
       required: true,

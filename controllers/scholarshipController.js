@@ -1,5 +1,7 @@
 const Scholarship = require("../models/Scholarship");
 const User = require("../models/User");
+const sendEmail = require("../utils/sendEmail");
+const getScholarshipSubmissionEmailHtml = require("../emailTemplates/getScholarshipSubmissionEmailHtml");
 
 // Add scholarship application
 exports.applyForScholarship = async (req, res) => {
@@ -12,6 +14,8 @@ exports.applyForScholarship = async (req, res) => {
       mobileNumber,
       challanNumber,
     } = req.body;
+
+    const userId = req.user._id;
 
     // Check if image was uploaded
     if (!req.file) {
@@ -46,6 +50,7 @@ exports.applyForScholarship = async (req, res) => {
 
     // Create new scholarship application
     const scholarship = new Scholarship({
+      userId,
       fullName,
       cnic,
       rollNumber,
@@ -56,6 +61,26 @@ exports.applyForScholarship = async (req, res) => {
     });
 
     await scholarship.save();
+
+    // Send scholarship submission confirmation email
+    try {
+      const scholarshipHtml = getScholarshipSubmissionEmailHtml({
+        userName: user.fullName,
+        rollNumber: user.rollNumber,
+        scholarshipId: scholarship._id,
+        submissionTime: new Date().toLocaleString(),
+        bannerUrl: `${req.protocol}://${req.get("host")}/uploads/email_banner.png`,
+      });
+
+      await sendEmail({
+        email: user.email,
+        subject: "Scholarship Application Submitted Successfully!",
+        message: scholarshipHtml,
+      });
+    } catch (emailError) {
+      console.error("Scholarship submission email error:", emailError);
+      // Don't fail the application if email fails
+    }
 
     res.status(201).json({
       message: "Scholarship application submitted successfully",

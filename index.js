@@ -65,9 +65,6 @@ app.use('/api/bank', bankRoutes);
 app.use('/api/scholarship', scholarshipRoutes);
 
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-
 // app.use(express.static(path.join(__dirname, 'client/build')));
 
 // // // All other GET requests (for React routes)
