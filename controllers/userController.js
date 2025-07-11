@@ -8,9 +8,11 @@ const getTestPassedEmailHtml = require("../emailTemplates/getTestPassedEmailHtml
 
 exports.generateAndSendPDF = async (req, res) => {
   try {
-    const { amount, userCourses } = req.body;
+    const { userCourses } = req.body;
     const user = req.user;
 
+    const amount = 2800;
+    
     const { filePath, fileName, challanNumber } = await generatePDF(
       user,
       amount,
@@ -122,7 +124,8 @@ exports.updateTestScore = async (req, res) => {
 
       await sendEmail({
         email: updatedUser.email,
-        subject: "Congratulations! You Have Passed the Admission Test – Now You Are Eligible For Hunarmand Punjab Scholarship Card",
+        subject:
+          "Congratulations! You Have Passed the Admission Test – Now You Are Eligible For Hunarmand Punjab Scholarship Card",
         message: testPassedHtml,
       });
     }
@@ -149,31 +152,38 @@ exports.getUserData = async (req, res) => {
     const user = req.user;
 
     // Get user data
-    const userData = await User.findById(user._id).select('-password -verifyToken -resetPasswordToken -resetPasswordExpire');
+    const userData = await User.findById(user._id).select(
+      "-password -verifyToken -resetPasswordToken -resetPasswordExpire"
+    );
 
     if (!userData) {
       return res.status(404).json({
-        status: 'error',
-        message: 'User not found'
+        status: "error",
+        message: "User not found",
       });
     }
 
     // Get challans for the user
-    const challans = await Challan.find({ userId: user._id.toString() }).sort({ createdAt: -1 });
+    const challans = await Challan.find({ userId: user._id.toString() }).sort({
+      createdAt: -1,
+    });
 
     // Get scholarship data for the user
-    const scholarship = await Scholarship.findOne({ 
+    const scholarship = await Scholarship.findOne({
       $or: [
         { rollNumber: userData.rollNumber },
         { email: userData.email },
-        { cnic: userData.cnic }
-      ]
+        { cnic: userData.cnic },
+      ],
     });
 
     // Calculate total challan amount and paid amount
-    const totalChallanAmount = challans.reduce((sum, challan) => sum + challan.amount, 0);
+    const totalChallanAmount = challans.reduce(
+      (sum, challan) => sum + challan.amount,
+      0
+    );
     const totalPaidAmount = challans
-      .filter(challan => challan.paid)
+      .filter((challan) => challan.paid)
       .reduce((sum, challan) => sum + challan.amount, 0);
     const totalUnpaidAmount = totalChallanAmount - totalPaidAmount;
 
@@ -197,14 +207,14 @@ exports.getUserData = async (req, res) => {
         testScore: userData.testScore,
         testPassed: userData.testPassed,
         createdAt: userData.createdAt,
-        updatedAt: userData.updatedAt
+        updatedAt: userData.updatedAt,
       },
       challans: {
         total: challans.length,
         totalAmount: totalChallanAmount,
         paidAmount: totalPaidAmount,
         unpaidAmount: totalUnpaidAmount,
-        challans: challans.map(challan => ({
+        challans: challans.map((challan) => ({
           challanId: challan.challanId,
           amount: challan.amount,
           paid: challan.paid,
@@ -212,34 +222,35 @@ exports.getUserData = async (req, res) => {
           txnId: challan.txnId,
           txnDate: challan.txnDate,
           createdAt: challan.createdAt,
-          updatedAt: challan.updatedAt
-        }))
+          updatedAt: challan.updatedAt,
+        })),
       },
-      scholarship: scholarship ? {
-        fullName: scholarship.fullName,
-        cnic: scholarship.cnic,
-        rollNumber: scholarship.rollNumber,
-        email: scholarship.email,
-        mobileNumber: scholarship.mobileNumber,
-        challanNumber: scholarship.challanNumber,
-        status: scholarship.status,
-        appliedAt: scholarship.appliedAt,
-        createdAt: scholarship.createdAt,
-        updatedAt: scholarship.updatedAt
-      } : null
+      scholarship: scholarship
+        ? {
+            fullName: scholarship.fullName,
+            cnic: scholarship.cnic,
+            rollNumber: scholarship.rollNumber,
+            email: scholarship.email,
+            mobileNumber: scholarship.mobileNumber,
+            challanNumber: scholarship.challanNumber,
+            status: scholarship.status,
+            appliedAt: scholarship.appliedAt,
+            createdAt: scholarship.createdAt,
+            updatedAt: scholarship.updatedAt,
+          }
+        : null,
     };
 
     return res.status(200).json({
-      status: 'success',
-      message: 'User data retrieved successfully',
-      data: responseData
+      status: "success",
+      message: "User data retrieved successfully",
+      data: responseData,
     });
-
   } catch (error) {
     console.error("Get user data error:", error);
     res.status(500).json({
-      status: 'error',
-      message: error.message
+      status: "error",
+      message: error.message,
     });
   }
 };

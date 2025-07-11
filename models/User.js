@@ -86,7 +86,7 @@ const userSchema = new mongoose.Schema(
     },
     testPassed: {
       type: Boolean,
-      default: null,
+      default: false,
     },
     referralCode: {
       type: String,
@@ -102,20 +102,20 @@ const userSchema = new mongoose.Schema(
 userSchema.statics.generateRollNumber = async function () {
   let rollNumber;
   let isUnique = false;
-  
+
   while (!isUnique) {
     // Generate roll number with format: HM-YYYY-XXXX (HM for Hunarmand, YYYY for year, XXXX for sequential number)
     const year = new Date().getFullYear();
     const randomNum = Math.floor(Math.random() * 9000) + 1000; // 4-digit random number
     rollNumber = `HM-${year}-${randomNum}`;
-    
+
     // Check if this roll number already exists
     const existingUser = await this.findOne({ rollNumber });
     if (!existingUser) {
       isUnique = true;
     }
   }
-  
+
   return rollNumber;
 };
 

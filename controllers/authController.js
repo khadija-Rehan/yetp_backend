@@ -6,6 +6,7 @@ const sendEmail = require("../utils/sendEmail");
 const Challan = require("../models/Challan");
 const getEmailVerificationHtml = require("../emailTemplates/getEmailVerificationHtml");
 const getUserLoginEmailHtml = require("../emailTemplates/getUserLoginEmailHtml");
+const getEmailVerifiedHtml = require("../emailTemplates/getEmailVerifiedHtml");
 
 // Signup function
 exports.signup = async (req, res) => {
@@ -118,11 +119,16 @@ exports.signup = async (req, res) => {
     const verifyUrl = `${req.protocol}://${req.get(
       "host"
     )}/api/auth/verify-email?token=${verifyToken}`;
-    const message = `Please verify your email by clicking the following link: ${verifyUrl}`;
+    const html = getEmailVerificationHtml({
+      userName: user.fullName,
+      verifyLink: verifyUrl,
+      bannerUrl: "https://hunarmandpunjab.pk/images/banner.png",
+    });
+
     await sendEmail({
       email: user.email,
-      subject: "Verify your email",
-      message,
+      subject: "Email Verified Successfully!",
+      html: html,
     });
 
     console.log(verifyUrl);
@@ -189,7 +195,7 @@ exports.login = async (req, res) => {
       loginTime: new Date().toLocaleString(),
     });
 
-      await sendEmail({
+    await sendEmail({
       email: user.email,
       subject: "Welcome back to Hunarmand!",
       html: html,
@@ -297,26 +303,22 @@ exports.verifyEmail = async (req, res) => {
     }
     const user = await User.findOne({ verifyToken: token });
     if (!user) {
-      return res  
+      return res
         .status(400)
         .json({ message: "Invalid or expired verification token" });
     }
     user.isVerified = true;
     user.verifyToken = "";
     await user.save();
-
-    const html = getEmailVerificationHtml({
+    const verificationHtml = getEmailVerifiedHtml({
       userName: user.fullName,
-      verifyLink: verifyUrl,
-      bannerUrl: "https://hunarmandpunjab.pk/images/banner.png",
+      rollNumber: user.rollNumber,
     });
-
     await sendEmail({
       email: user.email,
       subject: "Email Verified Successfully!",
-      html: html,
+      html: verificationHtml,
     });
-
     return res.redirect("https://hunarmandpunjab.pk/login");
   } catch (error) {
     return res.status(500).json({ message: error.message });
