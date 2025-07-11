@@ -52,10 +52,10 @@ const generatePDF = async (userData, amount, userCourses) => {
       const issueDateStr = issueDate.toLocaleDateString("en-GB"); // DD/MM/YYYY
       page.drawText(`${issueDateStr}`, { x: xOffset + 5, y: yOffset + 15, size: 10, font, color });
 
-      // Add due date (one week from issue) in the second one
-      const dueDate = new Date(issueDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-      const dueDateStr = dueDate.toLocaleDateString("en-GB"); // DD/MM/YYYY
-      page.drawText(`${dueDateStr}`, { x: xOffset + 130, y: yOffset + 15, size: 10, font, color });
+      // // Add due date (one week from issue) in the second one
+      // const dueDate = new Date(issueDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+      // const dueDateStr = dueDate.toLocaleDateString("en-GB"); // DD/MM/YYYY
+      // page.drawText(`${dueDateStr}`, { x: xOffset + 130, y: yOffset + 15, size: 10, font, color });
 
       // Draw each course, adjusting y for each
       const courseStartY = yOffset - 80;
