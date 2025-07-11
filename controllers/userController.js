@@ -12,7 +12,7 @@ exports.generateAndSendPDF = async (req, res) => {
     const user = req.user;
 
     const amount = 2800;
-    
+
     const { filePath, fileName, challanNumber } = await generatePDF(
       user,
       amount,
@@ -126,7 +126,7 @@ exports.updateTestScore = async (req, res) => {
         email: updatedUser.email,
         subject:
           "Congratulations! You Have Passed the Admission Test – Now You Are Eligible For Hunarmand Punjab Scholarship Card",
-        message: testPassedHtml,
+        html: testPassedHtml,
       });
     }
 
