@@ -41,24 +41,24 @@ const generatePDF = async (userData, amount, userCourses) => {
     positions.forEach(({ xOffset, yOffset }) => {
       const page = pages[0];
       page.drawText(challanNumber, { x: xOffset + 145, y: yOffset + 230, size: 10, font, color });
-      page.drawText(userData.fullName, { x: xOffset + 40, y: yOffset + 105, size: 10, font, color });
-      page.drawText(userData.fatherName, { x: xOffset + 40, y: yOffset + 80, size: 10, font, color });
-      page.drawText(userData.mobile, { x: xOffset + 40, y: yOffset + 60 , size: 10, font, color });
-      page.drawText(userData.email || "-", { x: xOffset + 40, y: yOffset + 35, size: 10, font, color });
+      page.drawText(userData.fullName, { x: xOffset + 40, y: yOffset + 135, size: 10, font, color });
+      page.drawText(userData.fatherName, { x: xOffset + 40, y: yOffset + 110, size: 10, font, color });
+      page.drawText(userData.mobile, { x: xOffset + 40, y: yOffset + 90 , size: 10, font, color });
+      page.drawText(userData.email || "-", { x: xOffset + 40, y: yOffset + 65, size: 10, font, color });
 
 
       // Add issue date in the first one
       const issueDate = new Date();
       const issueDateStr = issueDate.toLocaleDateString("en-GB"); // DD/MM/YYYY
-      page.drawText(`${issueDateStr}`, { x: xOffset + 5, y: yOffset + 15, size: 10, font, color });
+      page.drawText(`${issueDateStr}`, { x: xOffset + 5, y: yOffset + 45, size: 10, font, color });
 
-      // // Add due date (one week from issue) in the second one
-      // const dueDate = new Date(issueDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-      // const dueDateStr = dueDate.toLocaleDateString("en-GB"); // DD/MM/YYYY
-      // page.drawText(`${dueDateStr}`, { x: xOffset + 130, y: yOffset + 15, size: 10, font, color });
+      // Add due date (one week from issue) in the second one
+      const dueDate = new Date(issueDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+      const dueDateStr = dueDate.toLocaleDateString("en-GB"); // DD/MM/YYYY
+      page.drawText(`${dueDateStr}`, { x: xOffset + 130, y: yOffset + 45, size: 10, font, color });
 
       // Draw each course, adjusting y for each
-      const courseStartY = yOffset - 80;
+      const courseStartY = yOffset - 50;
       const courseGap = 15; // vertical gap between courses
       const coursesToShow = userCourses && userCourses.length > 0 ? userCourses : ["-"];
       coursesToShow.forEach((course, idx) => {
@@ -70,7 +70,7 @@ const generatePDF = async (userData, amount, userCourses) => {
       const processingFeeY = courseStartY - coursesToShow.length * courseGap;
       page.drawText("Processing Fee", { x: xOffset + 7, y: processingFeeY, size: 6, font, color });
       page.drawText(amount.toString(), { x: xOffset + 170, y: processingFeeY, size: 6, font, color });
-      page.drawText(`Rs. ${amount}`, { x: xOffset + 150, y: yOffset - 132, size: 10, font, color });
+      page.drawText(`Rs. ${amount}`, { x: xOffset + 150, y: yOffset - 100, size: 10, font, color });
     });
 
 
