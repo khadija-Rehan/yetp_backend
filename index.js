@@ -39,6 +39,7 @@ app.use(express.json());
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // MongoDB connection
 mongoose.connect(config.mongodbUri)

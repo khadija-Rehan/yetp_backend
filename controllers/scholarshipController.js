@@ -69,13 +69,12 @@ exports.applyForScholarship = async (req, res) => {
         rollNumber: user.rollNumber,
         scholarshipId: scholarship._id,
         submissionTime: new Date().toLocaleString(),
-        bannerUrl: `${req.protocol}://${req.get("host")}/uploads/email_banner.png`,
       });
 
       await sendEmail({
         email: user.email,
         subject: "Scholarship Application Submitted Successfully!",
-        message: scholarshipHtml,
+        html: scholarshipHtml,
       });
     } catch (emailError) {
       console.error("Scholarship submission email error:", emailError);

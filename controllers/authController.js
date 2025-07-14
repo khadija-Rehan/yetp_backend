@@ -124,7 +124,6 @@ exports.signup = async (req, res) => {
     const html = getEmailVerificationHtml({
       userName: user.fullName,
       verifyLink: verifyUrl,
-      bannerUrl: "https://hunarmandpunjab.pk/images/banner.png",
     });
 
     await sendEmail({
@@ -195,6 +194,7 @@ exports.login = async (req, res) => {
     const html = getUserLoginEmailHtml({
       userName: user.fullName,
       loginTime: new Date().toLocaleString(),
+      dashboardUrl: "https://hunarmandpunjab.pk/dashboard",
     });
 
     await sendEmail({
@@ -243,7 +243,6 @@ exports.forgotPassword = async (req, res) => {
     const html = getForgotPasswordEmailHtml({
       userName: user.fullName,
       resetUrl: resetUrl,
-      bannerUrl: `${req.protocol}://${req.get("host")}/uploads/email_banner.png`,
     });
 
     try {
@@ -295,7 +294,6 @@ exports.resetPassword = async (req, res) => {
     const html = getPasswordChangedEmailHtml({
       userName: user.fullName,
       changeTime: new Date().toLocaleString(),
-      bannerUrl: `${req.protocol}://${req.get("host")}/uploads/email_banner.png`,
     });
 
     await sendEmail({

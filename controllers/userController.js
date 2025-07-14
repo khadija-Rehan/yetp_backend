@@ -34,7 +34,6 @@ exports.generateAndSendPDF = async (req, res) => {
       userName: user.fullName,
       challanNumber: challanNumber,
       amount: amount,
-      bannerUrl: `${req.protocol}://${req.get("host")}/uploads/email_banner.png`,
     });
 
     await sendEmail({
