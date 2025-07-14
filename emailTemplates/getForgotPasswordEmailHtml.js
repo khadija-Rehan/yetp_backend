@@ -1,4 +1,4 @@
-function getForgotPasswordEmailHtml({ userName, resetUrl, bannerUrl }) {
+function getForgotPasswordEmailHtml({ userName, resetUrl }) {
     return `
     <!DOCTYPE html>
     <html>

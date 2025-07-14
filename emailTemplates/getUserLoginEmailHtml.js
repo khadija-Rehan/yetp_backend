@@ -28,7 +28,7 @@ function getUserLoginEmailHtml({ userName, loginTime, dashboardUrl }) {
             </p>
   
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${dashboardUrl}" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+              <a href="https://hunarmandpunjab.pk" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
                 Go to Dashboard
               </a>
             </div>

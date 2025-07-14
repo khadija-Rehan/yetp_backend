@@ -49,7 +49,7 @@ const generatePDF = async (userData, amount, userCourses) => {
       page.drawText(`${issueDateStr}`, { x: xOffset + 5, y: yOffset + 45, size: 10, font, color });
 
       // Add due date (one week from issue) in the second one
-      const dueDate = new Date(issueDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+      const dueDate = new Date(issueDate.getTime() + 3 * 24 * 60 * 60 * 1000);
       const dueDateStr = dueDate.toLocaleDateString("en-US"); // DD/MM/YYYY
       page.drawText(`${dueDateStr}`, { x: xOffset + 130, y: yOffset + 45, size: 10, font, color });
 

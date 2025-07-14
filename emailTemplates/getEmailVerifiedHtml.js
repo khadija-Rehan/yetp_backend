@@ -65,9 +65,6 @@ function getEmailVerifiedHtml({ userName, rollNumber }) {
                 Login to Your Account
               </a>
               <br>
-              <a href="https://hunarmandpunjab.pk/dashboard" style="background-color: #28a745; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
-                Go to Dashboard
-              </a>
             </div>
 
             <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">

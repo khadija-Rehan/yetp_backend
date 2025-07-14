@@ -58,9 +58,9 @@ exports.signup = async (req, res) => {
     }
 
     // Validate required fields
-    if (!firstCourse || !secondCourse) {
+    if (!firstCourse) {
       return res.status(400).json({
-        message: "firstCourse and secondCourse are required fields",
+        message: "firstCourse are required fields",
       });
     }
 
@@ -194,7 +194,7 @@ exports.login = async (req, res) => {
     const html = getUserLoginEmailHtml({
       userName: user.fullName,
       loginTime: new Date().toLocaleString(),
-      dashboardUrl: "https://hunarmandpunjab.pk/dashboard",
+      dashboardUrl: "https://hunarmandpunjab.pk/login",
     });
 
     await sendEmail({

@@ -65,11 +65,7 @@ function getTestPassedEmailHtml({ userName, testScore, rollNumber, bannerUrl }) 
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://hunarmandpunjab.pk/login" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
-                Login Here
-              </a>
-              <br>
-              <a href="https://hunarmandpunjab.pk/apply-scholarshipcard" style="background-color: #007bff; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
+              <a href="https://hunarmandpunjab.pk/apply-scholarshipcard" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
                 Scholarship Card Application Form
               </a>
             </div>
