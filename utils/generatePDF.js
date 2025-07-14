@@ -15,10 +15,6 @@ const generatePDF = async (userData, amount, userCourses) => {
       fs.mkdirSync(uploadsDir, { recursive: true });
     }
 
-
-    console.log("userCourses", userCourses);
-    
-
     const challanNumber = Date.now().toString().slice(-8);
     const fileName = `challan-${challanNumber}.pdf`;
     const filePath = path.join(uploadsDir, fileName);
@@ -49,12 +45,12 @@ const generatePDF = async (userData, amount, userCourses) => {
 
       // Add issue date in the first one
       const issueDate = new Date();
-      const issueDateStr = issueDate.toLocaleDateString("en-GB"); // DD/MM/YYYY
+      const issueDateStr = issueDate.toLocaleDateString("en-US"); // DD/MM/YYYY
       page.drawText(`${issueDateStr}`, { x: xOffset + 5, y: yOffset + 45, size: 10, font, color });
 
       // Add due date (one week from issue) in the second one
       const dueDate = new Date(issueDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-      const dueDateStr = dueDate.toLocaleDateString("en-GB"); // DD/MM/YYYY
+      const dueDateStr = dueDate.toLocaleDateString("en-US"); // DD/MM/YYYY
       page.drawText(`${dueDateStr}`, { x: xOffset + 130, y: yOffset + 45, size: 10, font, color });
 
       // Draw each course, adjusting y for each
@@ -63,14 +59,16 @@ const generatePDF = async (userData, amount, userCourses) => {
       const coursesToShow = userCourses && userCourses.length > 0 ? userCourses : ["-"];
       coursesToShow.forEach((course, idx) => {
         const courseY = courseStartY - idx * courseGap;
+        page.drawText((idx + 1).toString(), { x: xOffset - 30, y: courseY, size: 6, font, color });
         page.drawText(course, { x: xOffset + 7, y: courseY, size: 6, font, color });
         page.drawText('0', { x: xOffset + 170, y: courseY, size: 6, font, color });
       });
       // Add processing fee row
       const processingFeeY = courseStartY - coursesToShow.length * courseGap;
+      page.drawText("Total", { x: xOffset - 30, y: processingFeeY, size: 6, font, color });
       page.drawText("Processing Fee", { x: xOffset + 7, y: processingFeeY, size: 6, font, color });
       page.drawText(amount.toString(), { x: xOffset + 170, y: processingFeeY, size: 6, font, color });
-      page.drawText(`Rs. ${amount}`, { x: xOffset + 150, y: yOffset - 100, size: 10, font, color });
+      page.drawText(`Rs. ${amount}`, { x: xOffset + 150, y: yOffset - 100, size: 10, font, color, align: "right" });
     });
 
 

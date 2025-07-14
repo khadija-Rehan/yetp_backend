@@ -23,7 +23,7 @@ function getEmailVerificationHtml({ userName, verifyLink }) {
               Thank you for registering on <strong>Hunarmand Punjab</strong>. To secure your account and gain full access to our services, please verify your email address.
             </p>
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${verifyLink}" style="background-color: #007bff; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px;">
+              <a href="${verifyLink}" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block;">
                 Verify Email
               </a>
             </div>

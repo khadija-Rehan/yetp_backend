@@ -7,6 +7,8 @@ const Challan = require("../models/Challan");
 const getEmailVerificationHtml = require("../emailTemplates/getEmailVerificationHtml");
 const getUserLoginEmailHtml = require("../emailTemplates/getUserLoginEmailHtml");
 const getEmailVerifiedHtml = require("../emailTemplates/getEmailVerifiedHtml");
+const getForgotPasswordEmailHtml = require("../emailTemplates/getForgotPasswordEmailHtml");
+const getPasswordChangedEmailHtml = require("../emailTemplates/getPasswordChangedEmailHtml");
 
 // Signup function
 exports.signup = async (req, res) => {
@@ -235,17 +237,20 @@ exports.forgotPassword = async (req, res) => {
     await user.save({ validateBeforeSave: false });
 
     // Create reset url
-    const resetUrl = `${req.protocol}://${req.get(
-      "host"
-    )}/api/auth/reset-password/${resetToken}`;
+    const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+    // const resetUrl = `https://hunarmandpunjab.pk/reset-password/${resetToken}`;
 
-    const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+    const html = getForgotPasswordEmailHtml({
+      userName: user.fullName,
+      resetUrl: resetUrl,
+      bannerUrl: `${req.protocol}://${req.get("host")}/uploads/email_banner.png`,
+    });
 
     try {
       await sendEmail({
         email: user.email,
-        subject: "Password reset token",
-        message,
+        subject: "Password Reset Request - Hunarmand Punjab",
+        html: html,
       });
 
       res.status(200).json({ message: "Email sent" });
@@ -285,6 +290,19 @@ exports.resetPassword = async (req, res) => {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await user.save();
+
+    // Send password change confirmation email
+    const html = getPasswordChangedEmailHtml({
+      userName: user.fullName,
+      changeTime: new Date().toLocaleString(),
+      bannerUrl: `${req.protocol}://${req.get("host")}/uploads/email_banner.png`,
+    });
+
+    await sendEmail({
+      email: user.email,
+      subject: "Password Changed Successfully - Hunarmand Punjab",
+      html: html,
+    });
 
     res.status(200).json({ message: "Password reset successful" });
   } catch (error) {

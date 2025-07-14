@@ -5,13 +5,14 @@ const fs = require("fs");
 const Challan = require("../models/Challan");
 const Scholarship = require("../models/Scholarship");
 const getTestPassedEmailHtml = require("../emailTemplates/getTestPassedEmailHtml");
+const getChallanEmailHtml = require("../emailTemplates/getChallanEmailHtml");
 
 exports.generateAndSendPDF = async (req, res) => {
   try {
     const { userCourses } = req.body;
     const user = req.user;
 
-    const amount = 2800;
+    const amount = 2850;
 
     const { filePath, fileName, challanNumber } = await generatePDF(
       user,
@@ -28,12 +29,18 @@ exports.generateAndSendPDF = async (req, res) => {
     });
     await challan.save();
 
-    // Send email with PDF
+    // Send email with PDF attachment
+    const html = getChallanEmailHtml({
+      userName: user.fullName,
+      challanNumber: challanNumber,
+      amount: amount,
+      bannerUrl: `${req.protocol}://${req.get("host")}/uploads/email_banner.png`,
+    });
+
     await sendEmail({
       email: user.email,
-      subject: "Your Challan is Ready",
-      message:
-        "Please pay the challan amount to the following Challan number: challanNumber",
+      subject: "Your Challan is Ready - Hunarmand Punjab",
+      html: html,
       attachments: [
         {
           filename: fileName,

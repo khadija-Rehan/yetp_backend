@@ -61,11 +61,11 @@ function getEmailVerifiedHtml({ userName, rollNumber }) {
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://hunarmandpunjab.pk/login" style="background-color: #007bff; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px;">
+              <a href="https://hunarmandpunjab.pk/login" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
                 Login to Your Account
               </a>
               <br>
-              <a href="https://hunarmandpunjab.pk/dashboard" style="background-color: #28a745; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px;">
+              <a href="https://hunarmandpunjab.pk/dashboard" style="background-color: #28a745; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
                 Go to Dashboard
               </a>
             </div>
