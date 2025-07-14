@@ -110,6 +110,11 @@ exports.contactUs = async (req, res) => {
     <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9;">
       <table align="center" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
         <tr>
+          <td style="text-align: center;">
+            <img src="https://hunarmandpunjab.pk/images/email_banner.png" alt="Hunarmand Punjab" style="width: 100%; max-width: 600px;" />
+          </td>
+        </tr>
+        <tr>
           <td style="padding: 30px;">
             <h2 style="color: #28a745;">✅ Thank You for Contacting Us!</h2>
             <h3 style="color: #333333;">We've Received Your Message</h3>
