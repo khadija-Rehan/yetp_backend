@@ -18,19 +18,19 @@ module.exports = {
   emails: {
     // Email Verification & Email Verification Successfully
     verification: {
-      email: process.env.VERIFICATION_EMAIL || 'noreply@hunarmandpunjab.pk',
+      email: process.env.VERIFICATION_EMAIL || 'noreply@hunarmandpunjab.com',
       name: 'Hunarmand Punjab - No Reply'
     },
     
     // Admission Test Email Notification & Challan Email Notification & Certificate Notification
     admissions: {
-      email: process.env.ADMISSIONS_EMAIL || 'admissions@hunarmandpunjab.pk',
+      email: process.env.ADMISSIONS_EMAIL || 'admissions@hunarmandpunjab.com',
       name: 'Hunarmand Punjab - Admissions'
     },
     
     // Password Reset & Scholarship Card & Contact
     contact: {
-      email: process.env.CONTACT_EMAIL || 'contact@hunarmandpunjab.pk',
+      email: process.env.CONTACT_EMAIL || 'contact@hunarmandpunjab.com',
       name: 'Hunarmand Punjab - Contact'
     }
   }
