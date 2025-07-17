@@ -9,9 +9,29 @@ module.exports = {
   smtp: {
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
-    email: process.env.SMTP_EMAIL,
-    password: process.env.SMTP_PASSWORD,
+    password: process.env.SMTP_PASSWORD, // Same password for all emails
     fromName: process.env.FROM_NAME,
     fromEmail: process.env.FROM_EMAIL
+  },
+  
+  // Email configurations for different notification types
+  emails: {
+    // Email Verification & Email Verification Successfully
+    verification: {
+      email: process.env.VERIFICATION_EMAIL || 'noreply@hunarmandpunjab.pk',
+      name: 'Hunarmand Punjab - No Reply'
+    },
+    
+    // Admission Test Email Notification & Challan Email Notification & Certificate Notification
+    admissions: {
+      email: process.env.ADMISSIONS_EMAIL || 'admissions@hunarmandpunjab.pk',
+      name: 'Hunarmand Punjab - Admissions'
+    },
+    
+    // Password Reset & Scholarship Card & Contact
+    contact: {
+      email: process.env.CONTACT_EMAIL || 'contact@hunarmandpunjab.pk',
+      name: 'Hunarmand Punjab - Contact'
+    }
   }
 }; 

@@ -74,6 +74,7 @@ exports.applyForScholarship = async (req, res) => {
       email: user.email,
       subject: "Scholarship Application Submitted Successfully!",
       html: scholarshipHtml,
+      emailType: 'contact',
     });
 
     res.status(201).json({

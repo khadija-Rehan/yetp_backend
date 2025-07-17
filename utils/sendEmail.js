@@ -1,14 +1,32 @@
-const nodemailer = require('nodemailer');
-const config = require('../config/config');
+const nodemailer = require("nodemailer");
+const config = require("../config/config");
 
 const sendEmail = async (options) => {
   try {
+    // Determine which email configuration to use based on email type
+    let emailConfig;
+    
+    switch (options.emailType) {
+      case 'verification':
+        emailConfig = config.emails.verification;
+        break;
+      case 'admissions':
+        emailConfig = config.emails.admissions;
+        break;
+      case 'contact':
+        emailConfig = config.emails.contact;
+        break;
+      default:
+        // Default to contact email if no type specified
+        emailConfig = config.emails.admissions;
+    }
+
     const transporter = nodemailer.createTransport({
       host: config.smtp.host,
       port: config.smtp.port || 587,
-      secure: false,
+      secure: true,
       auth: {
-        user: config.smtp.email,
+        user: emailConfig.email,
         pass: config.smtp.password
       },
       tls: {
@@ -17,32 +35,32 @@ const sendEmail = async (options) => {
     });
 
     const message = {
-      from: `${process.env.FROM_NAME} <${process.env.FROM_EMAIL}>`,
+      from: `${emailConfig.name} <${emailConfig.email}>`,
       to: options.email,
       subject: options.subject,
       text: options.message,
       html: options.html,
-      attachments: options.attachments || []
+      attachments: options.attachments || [],
     };
 
     // Send email
     const info = await transporter.sendMail(message);
 
-    console.log('Message sent: %s', info.messageId);
-    
+    console.log("Message sent: %s", info.messageId);
+
     return {
       success: true,
       messageId: info.messageId,
-      message: 'Email sent successfully'
+      message: "Email sent successfully",
     };
   } catch (error) {
-    console.error('Email sending failed:', error);
+    console.error("Email sending failed:", error);
     return {
       success: false,
       error: error.message,
-      message: 'Failed to send email'
+      message: "Failed to send email",
     };
   }
 };
 
-module.exports = sendEmail; 
+module.exports = sendEmail;

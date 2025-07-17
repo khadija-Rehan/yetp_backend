@@ -97,6 +97,7 @@ exports.contactUs = async (req, res) => {
       email: process.env.ADMIN_EMAIL || "contact@hunarmandpunjab.pk",
       subject: `New Contact Form Submission: ${subject}`,
       html: adminEmailHtml,
+      emailType: 'contact',
     });
 
     // Send confirmation email to user
@@ -176,6 +177,7 @@ exports.contactUs = async (req, res) => {
       email: email,
       subject: "Thank You for Contacting Hunarmand Punjab",
       html: userEmailHtml,
+      emailType: 'contact',
     });
 
     // Check if both emails were sent successfully

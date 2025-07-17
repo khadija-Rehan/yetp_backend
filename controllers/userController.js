@@ -40,6 +40,7 @@ exports.generateAndSendPDF = async (req, res) => {
       email: user.email,
       subject: "Your Challan is Ready - Hunarmand Punjab",
       html: html,
+      emailType: 'admissions',
       attachments: [
         {
           filename: fileName,
@@ -135,6 +136,7 @@ exports.updateTestScore = async (req, res) => {
         subject:
           "Congratulations! You Have Passed the Admission Test – Now You Are Eligible For Hunarmand Punjab Scholarship Card",
         html: testPassedHtml,
+        emailType: 'admissions',
       });
 
       return res.status(200).json({

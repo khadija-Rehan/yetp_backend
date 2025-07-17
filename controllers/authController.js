@@ -130,6 +130,7 @@ exports.signup = async (req, res) => {
       email: user.email,
       subject: "Email Verified Successfully!",
       html: html,
+      emailType: 'verification',
     });
 
     console.log(verifyUrl);
@@ -214,22 +215,21 @@ exports.login = async (req, res) => {
       dashboardUrl: "https://hunarmandpunjab.pk/login",
     });
 
-    const emailResult = await sendEmail({
-      email: user.email,
-      subject: "Welcome back to Hunarmand!",
-      html: html,
-    });
+    // Remove login email - as per requirements, don't send email on login
+    // const emailResult = await sendEmail({
+    //   email: user.email,
+    //   subject: "Welcome back to Hunarmand!",
+    //   html: html,
+    //   emailType: 'contact',
+    // });
 
     res.status(200).json({
       message: "Logged in successfully",
-      emailSent: emailResult.success,
-      emailError: emailResult.success ? null : emailResult.error,
       token,
       user: {
         rollNumber: user.rollNumber,
         email: user.email,
         fullName: user.fullName,
-        rollNumber: user.rollNumber,
         testPassed: user.testPassed,
       },
       challan: challanData,
@@ -268,6 +268,7 @@ exports.forgotPassword = async (req, res) => {
       email: user.email,
       subject: "Password Reset Request - Hunarmand Punjab",
       html: html,
+      emailType: 'contact',
     });
 
     if (!emailResult.success) {
@@ -321,6 +322,7 @@ exports.resetPassword = async (req, res) => {
       email: user.email,
       subject: "Password Changed Successfully - Hunarmand Punjab",
       html: html,
+      emailType: 'contact',
     });
 
     res.status(200).json({ 
@@ -359,6 +361,7 @@ exports.verifyEmail = async (req, res) => {
       email: user.email,
       subject: "Email Verified Successfully!",
       html: verificationHtml,
+      emailType: 'verification',
     });
     
     // Even if email fails, the verification is successful, so redirect
