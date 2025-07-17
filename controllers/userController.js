@@ -36,7 +36,7 @@ exports.generateAndSendPDF = async (req, res) => {
       amount: amount,
     });
 
-    await sendEmail({
+    const emailResult = await sendEmail({
       email: user.email,
       subject: "Your Challan is Ready - Hunarmand Punjab",
       html: html,
@@ -60,6 +60,8 @@ exports.generateAndSendPDF = async (req, res) => {
     return res.status(200).json({
       status: "success",
       message: "PDF generated successfully",
+      emailSent: emailResult.success,
+      emailError: emailResult.success ? null : emailResult.error,
       data: { fileName }, // Only send this
     });
 
@@ -128,11 +130,22 @@ exports.updateTestScore = async (req, res) => {
         rollNumber: updatedUser.rollNumber,
       });
 
-      await sendEmail({
+      const emailResult = await sendEmail({
         email: updatedUser.email,
         subject:
           "Congratulations! You Have Passed the Admission Test – Now You Are Eligible For Hunarmand Punjab Scholarship Card",
         html: testPassedHtml,
+      });
+
+      return res.status(200).json({
+        status: "success",
+        message: "Test score updated successfully",
+        emailSent: emailResult.success,
+        emailError: emailResult.success ? null : emailResult.error,
+        data: {
+          testScore: updatedUser.testScore,
+          testPassed: updatedUser.testPassed,
+        },
       });
     }
 

@@ -126,7 +126,7 @@ exports.signup = async (req, res) => {
       verifyLink: verifyUrl,
     });
 
-    await sendEmail({
+    const emailResult = await sendEmail({
       email: user.email,
       subject: "Email Verified Successfully!",
       html: html,
@@ -134,9 +134,26 @@ exports.signup = async (req, res) => {
 
     console.log(verifyUrl);
 
+    if (!emailResult.success) {
+      // User created but email failed - still return success but with warning
+      return res.status(201).json({
+        message: "User created successfully, but verification email could not be sent. Please contact support.",
+        emailSent: false,
+        emailError: emailResult.error,
+        user: {
+          rollNumber: user.rollNumber,
+          email: user.email,
+          fullName: user.fullName,
+          courses: user.courses,
+          referralCode: user.referralCode,
+        },
+      });
+    }
+
     res.status(201).json({
       message:
         "User created successfully. Please check your email to verify your account.",
+      emailSent: true,
       user: {
         rollNumber: user.rollNumber,
         email: user.email,
@@ -197,7 +214,7 @@ exports.login = async (req, res) => {
       dashboardUrl: "https://hunarmandpunjab.pk/login",
     });
 
-    await sendEmail({
+    const emailResult = await sendEmail({
       email: user.email,
       subject: "Welcome back to Hunarmand!",
       html: html,
@@ -205,6 +222,8 @@ exports.login = async (req, res) => {
 
     res.status(200).json({
       message: "Logged in successfully",
+      emailSent: emailResult.success,
+      emailError: emailResult.success ? null : emailResult.error,
       token,
       user: {
         rollNumber: user.rollNumber,
@@ -245,23 +264,25 @@ exports.forgotPassword = async (req, res) => {
       resetUrl: resetUrl,
     });
 
-    try {
-      await sendEmail({
-        email: user.email,
-        subject: "Password Reset Request - Hunarmand Punjab",
-        html: html,
-      });
+    const emailResult = await sendEmail({
+      email: user.email,
+      subject: "Password Reset Request - Hunarmand Punjab",
+      html: html,
+    });
 
-      res.status(200).json({ message: "Email sent" });
-    } catch (err) {
-      console.log(err);
+    if (!emailResult.success) {
+      // Clean up the reset token since email failed
       user.resetPasswordToken = undefined;
       user.resetPasswordExpire = undefined;
-
       await user.save({ validateBeforeSave: false });
 
-      return res.status(500).json({ message: "Email could not be sent" });
+      return res.status(500).json({ 
+        message: "Password reset email could not be sent. Please try again later.",
+        emailError: emailResult.error
+      });
     }
+
+    res.status(200).json({ message: "Email sent" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -296,13 +317,17 @@ exports.resetPassword = async (req, res) => {
       changeTime: new Date().toLocaleString(),
     });
 
-    await sendEmail({
+    const emailResult = await sendEmail({
       email: user.email,
       subject: "Password Changed Successfully - Hunarmand Punjab",
       html: html,
     });
 
-    res.status(200).json({ message: "Password reset successful" });
+    res.status(200).json({ 
+      message: "Password reset successful",
+      emailSent: emailResult.success,
+      emailError: emailResult.success ? null : emailResult.error
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -330,11 +355,18 @@ exports.verifyEmail = async (req, res) => {
       userName: user.fullName,
       rollNumber: user.rollNumber,
     });
-    await sendEmail({
+    const emailResult = await sendEmail({
       email: user.email,
       subject: "Email Verified Successfully!",
       html: verificationHtml,
     });
+    
+    // Even if email fails, the verification is successful, so redirect
+    // but we could log the email failure for monitoring
+    if (!emailResult.success) {
+      console.error('Email verification confirmation failed:', emailResult.error);
+    }
+    
     return res.redirect("https://hunarmandpunjab.pk/login");
   } catch (error) {
     return res.status(500).json({ message: error.message });

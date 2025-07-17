@@ -63,26 +63,23 @@ exports.applyForScholarship = async (req, res) => {
     await scholarship.save();
 
     // Send scholarship submission confirmation email
-    try {
-      const scholarshipHtml = getScholarshipSubmissionEmailHtml({
-        userName: user.fullName,
-        rollNumber: user.rollNumber,
-        scholarshipId: scholarship._id,
-        submissionTime: new Date().toLocaleString(),
-      });
+    const scholarshipHtml = getScholarshipSubmissionEmailHtml({
+      userName: user.fullName,
+      rollNumber: user.rollNumber,
+      scholarshipId: scholarship._id,
+      submissionTime: new Date().toLocaleString(),
+    });
 
-      await sendEmail({
-        email: user.email,
-        subject: "Scholarship Application Submitted Successfully!",
-        html: scholarshipHtml,
-      });
-    } catch (emailError) {
-      console.error("Scholarship submission email error:", emailError);
-      // Don't fail the application if email fails
-    }
+    const emailResult = await sendEmail({
+      email: user.email,
+      subject: "Scholarship Application Submitted Successfully!",
+      html: scholarshipHtml,
+    });
 
     res.status(201).json({
       message: "Scholarship application submitted successfully",
+      emailSent: emailResult.success,
+      emailError: emailResult.success ? null : emailResult.error,
       scholarship: {
         id: scholarship._id,
         fullName: scholarship.fullName,

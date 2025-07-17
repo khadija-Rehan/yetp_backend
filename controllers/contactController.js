@@ -93,7 +93,7 @@ exports.contactUs = async (req, res) => {
     `;
 
     // Send email to admin
-    await sendEmail({
+    const adminEmailResult = await sendEmail({
       email: process.env.ADMIN_EMAIL || "contact@hunarmandpunjab.pk",
       subject: `New Contact Form Submission: ${subject}`,
       html: adminEmailHtml,
@@ -172,11 +172,40 @@ exports.contactUs = async (req, res) => {
     </html>
     `;
 
-    await sendEmail({
+    const userEmailResult = await sendEmail({
       email: email,
       subject: "Thank You for Contacting Hunarmand Punjab",
       html: userEmailHtml,
     });
+
+    // Check if both emails were sent successfully
+    const adminEmailSent = adminEmailResult.success;
+    const userEmailSent = userEmailResult.success;
+
+    if (!adminEmailSent && !userEmailSent) {
+      // Both emails failed
+      return res.status(500).json({
+        status: "error",
+        message: "Failed to send message. Please try again later.",
+        emailError: "Both admin notification and user confirmation emails failed to send"
+      });
+    } else if (!adminEmailSent) {
+      // Only admin email failed
+      return res.status(200).json({
+        status: "success",
+        message: "Your message has been sent successfully. We'll get back to you soon!",
+        warning: "Admin notification email failed to send, but your message was received",
+        adminEmailError: adminEmailResult.error
+      });
+    } else if (!userEmailResult.success) {
+      // Only user email failed
+      return res.status(200).json({
+        status: "success",
+        message: "Your message has been sent successfully. We'll get back to you soon!",
+        warning: "Confirmation email failed to send, but your message was received",
+        userEmailError: userEmailResult.error
+      });
+    }
 
     return res.status(200).json({
       status: "success",
