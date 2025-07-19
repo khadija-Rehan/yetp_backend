@@ -9,7 +9,7 @@ const getChallanEmailHtml = require("../emailTemplates/getChallanEmailHtml");
 
 exports.generateAndSendPDF = async (req, res) => {
   try {
-    const { userCourses } = req.body;
+    // const { userCourses } = req.body;
     const user = req.user;
 
     const amount = 2850;
@@ -17,7 +17,7 @@ exports.generateAndSendPDF = async (req, res) => {
     const { filePath, fileName, challanNumber } = await generatePDF(
       user,
       amount,
-      userCourses
+      user.courses
     );
 
     // Save challan details to database
