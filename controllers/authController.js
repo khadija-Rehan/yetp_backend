@@ -128,7 +128,7 @@ exports.signup = async (req, res) => {
 
     const emailResult = await sendEmail({
       email: user.email,
-      subject: "Email Verified Successfully!",
+      subject: "Email Verification",
       html: html,
       emailType: 'verification',
     });

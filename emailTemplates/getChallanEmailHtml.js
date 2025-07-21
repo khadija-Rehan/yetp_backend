@@ -52,7 +52,6 @@ function getChallanEmailHtml({ userName, challanNumber, amount, bannerUrl }) {
             <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <h4 style="color: #856404; margin-top: 0;">⚠️ Important Notes:</h4>
               <ul style="font-size: 14px; color: #856404; padding-left: 20px;">
-                <li>This challan is valid for 30 days from the date of generation</li>
                 <li>Pay the exact amount mentioned - no additional charges</li>
                 <li>Processing fee is non-refundable once paid</li>
                 <li>After successful payment of processing fee your payment status will be updated to Paid. Check on your Dashboard</li>
