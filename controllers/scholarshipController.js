@@ -70,12 +70,12 @@ exports.applyForScholarship = async (req, res) => {
       submissionTime: new Date().toLocaleString(),
     });
 
-    const emailResult = await sendEmail({
-      email: user.email,
-      subject: "Scholarship Application Submitted Successfully!",
-      html: scholarshipHtml,
-      emailType: 'contact',
-    });
+    // const emailResult = await sendEmail({
+    //   email: user.email,
+    //   subject: "Scholarship Application Submitted Successfully!",
+    //   html: scholarshipHtml,
+    //   emailType: 'contact',
+    // });
 
     res.status(201).json({
       message: "Scholarship application submitted successfully",

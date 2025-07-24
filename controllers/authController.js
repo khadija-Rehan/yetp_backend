@@ -113,43 +113,43 @@ exports.signup = async (req, res) => {
     // Generate verification token
     const verifyToken = crypto.randomBytes(32).toString("hex");
     user.verifyToken = verifyToken;
-    user.isVerified = false;
+    user.isVerified = true;
 
     await user.save();
 
     // Send verification email
-    const verifyUrl = `${req.protocol}://${req.get(
-      "host"
-    )}/api/auth/verify-email?token=${verifyToken}`;
-    const html = getEmailVerificationHtml({
-      userName: user.fullName,
-      verifyLink: verifyUrl,
-    });
+    // const verifyUrl = `${req.protocol}://${req.get(
+    //   "host"
+    // )}/api/auth/verify-email?token=${verifyToken}`;
+    // const html = getEmailVerificationHtml({
+    //   userName: user.fullName,
+    //   verifyLink: verifyUrl,
+    // });
 
-    const emailResult = await sendEmail({
-      email: user.email,
-      subject: "Email Verification",
-      html: html,
-      emailType: 'verification',
-    });
+    // const emailResult = await sendEmail({
+    //   email: user.email,
+    //   subject: "Email Verification",
+    //   html: html,
+    //   emailType: 'verification',
+    // });
 
-    console.log(verifyUrl);
+    // console.log(verifyUrl);
 
-    if (!emailResult.success) {
-      // User created but email failed - still return success but with warning
-      return res.status(201).json({
-        message: "User created successfully, but verification email could not be sent. Please contact support.",
-        emailSent: false,
-        emailError: emailResult.error,
-        user: {
-          rollNumber: user.rollNumber,
-          email: user.email,
-          fullName: user.fullName,
-          courses: user.courses,
-          referralCode: user.referralCode,
-        },
-      });
-    }
+    // if (!emailResult.success) {
+    //   // User created but email failed - still return success but with warning
+    //   return res.status(201).json({
+    //     message: "User created successfully, but verification email could not be sent. Please contact support.",
+    //     emailSent: false,
+    //     emailError: emailResult.error,
+    //     user: {
+    //       rollNumber: user.rollNumber,
+    //       email: user.email,
+    //       fullName: user.fullName,
+    //       courses: user.courses,
+    //       referralCode: user.referralCode,
+    //     },
+    //   });
+    // }
 
     res.status(201).json({
       message:
@@ -161,7 +161,6 @@ exports.signup = async (req, res) => {
         fullName: user.fullName,
         courses: user.courses,
         referralCode: user.referralCode,
-        // Don't send sensitive information
       },
     });
   } catch (error) {
@@ -357,12 +356,12 @@ exports.verifyEmail = async (req, res) => {
       userName: user.fullName,
       rollNumber: user.rollNumber,
     });
-    const emailResult = await sendEmail({
-      email: user.email,
-      subject: "Email Verified Successfully!",
-      html: verificationHtml,
-      emailType: 'verification',
-    });
+    // const emailResult = await sendEmail({
+    //   email: user.email,
+    //   subject: "Email Verified Successfully!",
+    //   html: verificationHtml,
+    //   emailType: 'verification',
+    // });
     
     // Even if email fails, the verification is successful, so redirect
     // but we could log the email failure for monitoring
