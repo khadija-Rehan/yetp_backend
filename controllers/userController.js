@@ -40,7 +40,7 @@ exports.generateAndSendPDF = async (req, res) => {
       email: user.email,
       subject: "Your Challan is Ready - Hunarmand Punjab",
       html: html,
-      emailType: 'admissions',
+      emailType: 'contact',
       attachments: [
         {
           filename: fileName,
