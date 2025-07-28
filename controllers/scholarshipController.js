@@ -79,8 +79,8 @@ exports.applyForScholarship = async (req, res) => {
 
     res.status(201).json({
       message: "Scholarship application submitted successfully",
-      emailSent: emailResult.success,
-      emailError: emailResult.success ? null : emailResult.error,
+      // emailSent: emailResult.success,
+      // emailError: emailResult.success ? null : emailResult.error,
       scholarship: {
         id: scholarship._id,
         fullName: scholarship.fullName,
