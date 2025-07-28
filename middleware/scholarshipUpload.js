@@ -1,7 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 
-// Configure storage for scholarship images
+// Configure storage for scholarship uploads (images and pdf)
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
@@ -14,13 +14,21 @@ const storage = multer.diskStorage({
   }
 });
 
-// File filter to accept only images
+// File filter to allow only jpg, png, and pdf
 const fileFilter = (req, file, cb) => {
-  // Check file type
-  if (file.mimetype.startsWith('image/')) {
+  const allowedMimeTypes = [
+    'image/jpeg',
+    'image/png',
+    'application/pdf'
+  ];
+  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.pdf'];
+
+  const ext = path.extname(file.originalname).toLowerCase();
+
+  if (allowedMimeTypes.includes(file.mimetype) && allowedExtensions.includes(ext)) {
     cb(null, true);
   } else {
-    cb(new Error('Only image files are allowed!'), false);
+    cb(new Error('Only JPG, PNG, and PDF files are allowed!'), false);
   }
 };
 
@@ -29,11 +37,11 @@ const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
+    fileSize: 20 * 1024 * 1024, // 20MB limit
   }
 });
 
-// Single file upload middleware for scholarship image
+// Single file upload middleware for scholarship file (image or pdf)
 const uploadScholarshipImage = upload.single('image');
 
 module.exports = uploadScholarshipImage; 
