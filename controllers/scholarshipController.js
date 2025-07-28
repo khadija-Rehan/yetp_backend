@@ -15,7 +15,8 @@ exports.applyForScholarship = async (req, res) => {
       challanNumber,
     } = req.body;
 
-    const userId = req.user._id;
+    // For public scholarship application, we don't require user authentication
+    // const userId = req.user._id;
 
     // Check if image was uploaded
     if (!req.file) {
@@ -50,7 +51,7 @@ exports.applyForScholarship = async (req, res) => {
 
     // Create new scholarship application
     const scholarship = new Scholarship({
-      userId,
+      // userId, // Not required for public applications
       fullName,
       cnic,
       rollNumber,
@@ -92,7 +93,35 @@ exports.applyForScholarship = async (req, res) => {
     });
   } catch (error) {
     console.error("Scholarship application error:", error);
-    res.status(500).json({ message: error.message });
+    
+    if (error.name === 'ValidationError') {
+      const validationErrors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ 
+        message: validationErrors.join(', '),
+        errors: validationErrors
+      });
+    }
+    
+    if (error.code === 11000) {
+      // Duplicate key error
+      const field = Object.keys(error.keyValue)[0];
+      const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
+      return res.status(400).json({ 
+        message: `${fieldName} already exists`,
+        field: field
+      });
+    }
+    
+    if (error.name === 'CastError') {
+      return res.status(400).json({ 
+        message: 'Invalid data format provided'
+      });
+    }
+    
+    res.status(500).json({ 
+      message: 'Server error occurred. Please try again later.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -109,7 +138,17 @@ exports.getAllScholarships = async (req, res) => {
     });
   } catch (error) {
     console.error("Get scholarships error:", error);
-    res.status(500).json({ message: error.message });
+    
+    if (error.name === 'CastError') {
+      return res.status(400).json({ 
+        message: 'Invalid data format provided'
+      });
+    }
+    
+    res.status(500).json({ 
+      message: 'Server error occurred. Please try again later.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -129,7 +168,17 @@ exports.getScholarshipById = async (req, res) => {
     });
   } catch (error) {
     console.error("Get scholarship by ID error:", error);
-    res.status(500).json({ message: error.message });
+    
+    if (error.name === 'CastError') {
+      return res.status(400).json({ 
+        message: 'Invalid scholarship ID format'
+      });
+    }
+    
+    res.status(500).json({ 
+      message: 'Server error occurred. Please try again later.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -149,7 +198,17 @@ exports.getScholarshipByRollNumber = async (req, res) => {
     });
   } catch (error) {
     console.error("Get scholarship by roll number error:", error);
-    res.status(500).json({ message: error.message });
+    
+    if (error.name === 'CastError') {
+      return res.status(400).json({ 
+        message: 'Invalid roll number format'
+      });
+    }
+    
+    res.status(500).json({ 
+      message: 'Server error occurred. Please try again later.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -179,7 +238,25 @@ exports.updateScholarshipStatus = async (req, res) => {
     });
   } catch (error) {
     console.error("Update scholarship status error:", error);
-    res.status(500).json({ message: error.message });
+    
+    if (error.name === 'ValidationError') {
+      const validationErrors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ 
+        message: validationErrors.join(', '),
+        errors: validationErrors
+      });
+    }
+    
+    if (error.name === 'CastError') {
+      return res.status(400).json({ 
+        message: 'Invalid scholarship ID format'
+      });
+    }
+    
+    res.status(500).json({ 
+      message: 'Server error occurred. Please try again later.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -198,6 +275,16 @@ exports.deleteScholarship = async (req, res) => {
     });
   } catch (error) {
     console.error("Delete scholarship error:", error);
-    res.status(500).json({ message: error.message });
+    
+    if (error.name === 'CastError') {
+      return res.status(400).json({ 
+        message: 'Invalid scholarship ID format'
+      });
+    }
+    
+    res.status(500).json({ 
+      message: 'Server error occurred. Please try again later.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 }; 

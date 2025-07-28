@@ -13,14 +13,12 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.use(authMiddleware);
-// Public route - Apply for scholarship (no auth required)
+// Public routes (no auth required)
 router.post('/apply', uploadScholarshipImage, scholarshipValidation, applyForScholarship);
-
-// Get scholarship by roll number (public route for checking status)
 router.get('/check/:rollNumber', getScholarshipByRollNumber);
 
 // Protected routes (require authentication)
+router.use(authMiddleware);
 
 // Get all scholarships (admin)
 router.get('/', getAllScholarships);

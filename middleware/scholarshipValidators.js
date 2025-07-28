@@ -4,9 +4,11 @@ const { body, validationResult } = require('express-validator');
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    // Convert validation errors to a more user-friendly format
+    const errorMessages = errors.array().map(error => error.msg);
     return res.status(400).json({ 
-      message: 'Validation failed',
-      errors: errors.array() 
+      message: errorMessages.join(', '),
+      errors: errors.array() // Keep original format for debugging
     });
   }
   next();
@@ -18,11 +20,14 @@ const scholarshipValidation = [
     .notEmpty()
     .withMessage("Full name is required")
     .isLength({ min: 2, max: 100 })
-    .withMessage("Full name must be between 2 and 100 characters"),
+    .withMessage("Full name must be between 2 and 100 characters")
+    .matches(/^[a-zA-Z\s]+$/)
+    .withMessage("Full name should only contain letters and spaces"),
 
   body("cnic")
     .notEmpty()
     .withMessage("CNIC is required")
+    .customSanitizer(value => value.replace(/[^\d]/g, ""))
     .matches(/^[0-9]{13}$/)
     .withMessage("CNIC must be 13 digits"),
 
@@ -30,24 +35,39 @@ const scholarshipValidation = [
     .notEmpty()
     .withMessage("Roll number is required")
     .matches(/^HM-\d{4}-\d{4}$/)
-    .withMessage("Roll number must be in format HM-YYYY-XXXX"),
+    .withMessage("Roll number must be in format HM-YYYY-XXXX (e.g., HM-2024-0001)")
+    .custom((value) => {
+      const parts = value.split('-');
+      const year = parseInt(parts[1]);
+      const currentYear = new Date().getFullYear();
+      
+      if (year < 2020 || year > currentYear + 1) {
+        throw new Error(`Roll number year should be between 2020 and ${currentYear + 1}`);
+      }
+      return true;
+    }),
 
   body("email")
     .isEmail()
     .withMessage("Please enter a valid email")
+    .isLength({ max: 254 })
+    .withMessage("Email address is too long")
     .normalizeEmail(),
 
   body("mobileNumber")
     .notEmpty()
     .withMessage("Mobile number is required")
-    .matches(/^[0-9]{11}$/)
-    .withMessage("Mobile number must be 11 digits"),
+    .customSanitizer(value => value.replace(/[-\s]/g, ""))
+    .matches(/^03\d{9}$/)
+    .withMessage("Mobile number must start with 03 and be 11 digits"),
 
   body("challanNumber")
     .notEmpty()
     .withMessage("Challan number is required")
-    .isLength({ min: 1, max: 50 })
-    .withMessage("Challan number must be between 1 and 50 characters"),
+    .isLength({ min: 3, max: 50 })
+    .withMessage("Challan number must be between 3 and 50 characters")
+    .matches(/^[a-zA-Z0-9\-\s]+$/)
+    .withMessage("Challan number should only contain letters, numbers, hyphens, and spaces"),
 
   validate,
 ];

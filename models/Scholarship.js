@@ -4,7 +4,7 @@ const scholarshipSchema = new mongoose.Schema(
   {
     userId: {
       type: String,
-      required: true,
+      required: false, // Made optional for public applications
     },
     fullName: {
       type: String,

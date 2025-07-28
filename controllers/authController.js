@@ -153,7 +153,7 @@ exports.signup = async (req, res) => {
 
     res.status(201).json({
       message:
-        "User created successfully. Please check your email to verify your account.",
+        "User created successfully. You can login now.",
       emailSent: true,
       user: {
         rollNumber: user.rollNumber,
@@ -164,7 +164,37 @@ exports.signup = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Signup error:', error);
+    
+    // Handle different types of errors
+    if (error.name === 'ValidationError') {
+      const validationErrors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ 
+        message: validationErrors.join(', '),
+        errors: validationErrors
+      });
+    }
+    
+    if (error.code === 11000) {
+      // Duplicate key error
+      const field = Object.keys(error.keyValue)[0];
+      const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
+      return res.status(400).json({ 
+        message: `${fieldName} already exists`,
+        field: field
+      });
+    }
+    
+    if (error.name === 'CastError') {
+      return res.status(400).json({ 
+        message: 'Invalid data format provided'
+      });
+    }
+    
+    res.status(500).json({ 
+      message: 'Server error occurred. Please try again later.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -235,7 +265,26 @@ exports.login = async (req, res) => {
     });
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({ message: error.message });
+    
+    // Handle different types of errors
+    if (error.name === 'ValidationError') {
+      const validationErrors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({ 
+        message: validationErrors.join(', '),
+        errors: validationErrors
+      });
+    }
+    
+    if (error.name === 'CastError') {
+      return res.status(400).json({ 
+        message: 'Invalid data format provided'
+      });
+    }
+    
+    res.status(500).json({ 
+      message: 'Server error occurred. Please try again later.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 

@@ -4,7 +4,12 @@ const { body, validationResult } = require("express-validator");
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    // Convert validation errors to a more user-friendly format
+    const errorMessages = errors.array().map(error => error.msg);
+    return res.status(400).json({ 
+      message: errorMessages.join(', '),
+      errors: errors.array() // Keep original format for debugging
+    });
   }
   next();
 };
@@ -59,7 +64,7 @@ const signupValidation = [
   body("gender")
     .notEmpty()
     .withMessage("Gender is required")
-    .isIn(["male", "female"])
+    .isIn(["male", "female", "other"])
     .withMessage("Invalid gender"),
 
   // body("qualification").notEmpty().withMessage("Qualification is required"),
