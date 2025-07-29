@@ -33,7 +33,7 @@ exports.applyForScholarship = async (req, res) => {
     }
 
     // Verify that the provided data matches the user's data
-    if (user.email !== email || user.cnic !== cnic || user.fullName !== fullName) {
+    if (user.email !== email || user.cnic !== cnic) {
       return res.status(400).json({ message: "User data does not match with registered user" });
     }
 
