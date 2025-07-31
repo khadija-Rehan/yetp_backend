@@ -12,6 +12,14 @@ exports.generateAndSendPDF = async (req, res) => {
     // const { userCourses } = req.body;
     const user = req.user;
 
+    // Validate user object
+    if (!user || !user._id) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid user data",
+      });
+    }
+
     const amount = 2850;
 
     const { filePath, fileName, challanNumber } = await generatePDF(

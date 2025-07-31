@@ -37,9 +37,9 @@ const generatePDF = async (userData, amount, userCourses) => {
     positions.forEach(({ xOffset, yOffset }) => {
       const page = pages[0];
       page.drawText(challanNumber, { x: xOffset + 145, y: yOffset + 230, size: 10, font, color });
-      page.drawText(userData.fullName, { x: xOffset + 40, y: yOffset + 135, size: 10, font, color });
-      page.drawText(userData.fatherName, { x: xOffset + 40, y: yOffset + 110, size: 10, font, color });
-      page.drawText(userData.mobile, { x: xOffset + 40, y: yOffset + 90 , size: 10, font, color });
+      page.drawText(userData.fullName || "-", { x: xOffset + 40, y: yOffset + 135, size: 10, font, color });
+      page.drawText(userData.fatherName || "-", { x: xOffset + 40, y: yOffset + 110, size: 10, font, color });
+      page.drawText(userData.mobile || "-", { x: xOffset + 40, y: yOffset + 90 , size: 10, font, color });
       page.drawText(userData.email || "-", { x: xOffset + 40, y: yOffset + 65, size: 10, font, color });
 
 
