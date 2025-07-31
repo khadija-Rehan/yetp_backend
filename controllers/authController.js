@@ -14,7 +14,7 @@ const getPasswordChangedEmailHtml = require("../emailTemplates/getPasswordChange
 exports.signup = async (req, res) => {
   try {
     // console.log('Files:', req.files);
-    console.log(req.body);
+    console.log("req.boydddd",req.body);
 
     const {
       email,
@@ -38,17 +38,20 @@ exports.signup = async (req, res) => {
       secondCourse,
       referralCode,
     } = req.body;
+    console.log("req.boydddd 1");
 
     // Check if user already exists
     const existingEmail = await User.findOne({ email });
     if (existingEmail) {
       return res.status(400).json({ message: "Email already registered" });
     }
+    console.log("req.boydddd 2");
 
     const existingCnic = await User.findOne({ cnic });
     if (existingCnic) {
       return res.status(400).json({ message: "CNIC already registered" });
     }
+    console.log("req.boydddd 3");
 
     const existingMobile = await User.findOne({ mobile });
     if (existingMobile) {
@@ -56,6 +59,7 @@ exports.signup = async (req, res) => {
         .status(400)
         .json({ message: "Mobile number already registered" });
     }
+    console.log("req.boydddd 4");
 
     // Validate required fields
     if (!firstCourse) {
@@ -63,6 +67,7 @@ exports.signup = async (req, res) => {
         message: "firstCourse are required fields",
       });
     }
+    console.log("req.boydddd 5");
 
     // Get file URLs from uploaded files
     const cnicFront = req.files["cnicFront"]
@@ -71,6 +76,7 @@ exports.signup = async (req, res) => {
     const cnicBack = req.files["cnicBack"]
       ? `/uploads/${req.files["cnicBack"][0].filename}`
       : null;
+      console.log("req.boydddd 16");
 
     if (!cnicFront || !cnicBack) {
       return res
@@ -78,6 +84,7 @@ exports.signup = async (req, res) => {
         .json({ message: "Both cnicFront and cnicBack files are required" });
     }
 
+    console.log("req.boydddd 190");
     // Generate unique roll number
     const rollNumber = await User.generateRollNumber();
 
@@ -116,6 +123,7 @@ exports.signup = async (req, res) => {
     user.isVerified = true;
 
     await user.save();
+    console.log("savedddd");
 
     // Send verification email
     // const verifyUrl = `${req.protocol}://${req.get(
