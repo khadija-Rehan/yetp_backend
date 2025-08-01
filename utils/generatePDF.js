@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { PDFDocument, StandardFonts, rgb } = require("pdf-lib");
+const Challan = require("../models/Challan"); // Import Challan model
 
 /**
  * Fills values into an existing challan form and saves to /uploads
@@ -15,9 +16,29 @@ const generatePDF = async (userData, amount, userCourses) => {
       fs.mkdirSync(uploadsDir, { recursive: true });
     }
 
-    const challanNumber = Date.now().toString().slice(-8);
-    const fileName = `challan-${challanNumber}.pdf`;
-    const filePath = path.join(uploadsDir, fileName);
+    // Generate new challan number
+    let challanNumber, fileName, filePath, existingChallan;
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    // Try to generate a unique challan number (not in DB)
+    do {
+      const now = Date.now().toString(); // e.g., "1722267402733"
+      const shortTime = now.slice(-5);   // last 5 digits of timestamp
+      const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0'); // 000–999
+      challanNumber = shortTime + random; // 5 timestamp digits + 3 random = 8 digits
+
+      // Check if challan with this number exists in DB
+      existingChallan = await Challan.findOne({ challanId: challanNumber });
+      attempts++;
+    } while (existingChallan && attempts < maxAttempts);
+
+    if (existingChallan) {
+      throw new Error("Failed to generate a unique challan number after several attempts.");
+    }
+
+    fileName = `challan-${challanNumber}.pdf`;
+    filePath = path.join(uploadsDir, fileName);
 
     const templatePath = path.join(__dirname, "../", "challan.pdf");
     const existingPdfBytes = fs.readFileSync(templatePath);
@@ -41,7 +62,6 @@ const generatePDF = async (userData, amount, userCourses) => {
       page.drawText(userData.fatherName || "-", { x: xOffset + 40, y: yOffset + 110, size: 10, font, color });
       page.drawText(userData.mobile || "-", { x: xOffset + 40, y: yOffset + 90 , size: 10, font, color });
       page.drawText(userData.email || "-", { x: xOffset + 40, y: yOffset + 65, size: 10, font, color });
-
 
       // Add issue date in the first one
       const issueDate = new Date();
@@ -80,7 +100,6 @@ const generatePDF = async (userData, amount, userCourses) => {
       page.drawText(amount.toString(), { x: xOffset + 170, y: processingFeeY, size: 6, font, color });
       page.drawText(`Rs. ${amount}`, { x: xOffset + 150, y: yOffset - 100, size: 10, font, color, align: "right" });
     });
-
 
     const pdfBytes = await pdfDoc.save();
     fs.writeFileSync(filePath, pdfBytes);
