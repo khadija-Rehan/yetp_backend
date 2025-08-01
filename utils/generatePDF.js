@@ -56,7 +56,17 @@ const generatePDF = async (userData, amount, userCourses) => {
       // Draw each course, adjusting y for each
       const courseStartY = yOffset - 50;
       const courseGap = 15; // vertical gap between courses
-      const coursesToShow = userCourses && userCourses.length > 0 ? userCourses : ["-"];
+      // Filter out null/undefined courses, only add the first valid course (if any)
+      let coursesToShow = [];
+      if (Array.isArray(userCourses) && userCourses.length > 0) {
+        const filtered = userCourses.filter(course => course != null);
+        if (filtered.length > 0) {
+          coursesToShow = [filtered[0]];
+        }
+      }
+      if (coursesToShow.length === 0) {
+        coursesToShow = ["-"];
+      }
       coursesToShow.forEach((course, idx) => {
         const courseY = courseStartY - idx * courseGap;
         page.drawText((idx + 1).toString(), { x: xOffset - 30, y: courseY, size: 6, font, color });
