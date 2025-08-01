@@ -87,10 +87,11 @@ exports.signup = async (req, res) => {
     console.log("req.boydddd 190");
     // Generate unique roll number
     const rollNumber = await User.generateRollNumber();
-
+    
     // Make courses array of string
     const courses = [firstCourse, secondCourse];
-
+    
+    console.log("req.boydddd 191");
     // Create new user with all fields
     const user = new User({
       rollNumber,
@@ -117,13 +118,15 @@ exports.signup = async (req, res) => {
       referralCode,
     });
 
+    console.log("req.boydddd 192");
     // Generate verification token
     const verifyToken = crypto.randomBytes(32).toString("hex");
     user.verifyToken = verifyToken;
     user.isVerified = true;
 
+    console.log("req.boydddd 193");
     await user.save();
-    console.log("savedddd");
+    console.log("req.boydddd 194");
 
     // Send verification email
     // const verifyUrl = `${req.protocol}://${req.get(

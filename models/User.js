@@ -100,23 +100,27 @@ const userSchema = new mongoose.Schema(
 
 // Generate unique roll number
 userSchema.statics.generateRollNumber = async function () {
-  let rollNumber;
-  let isUnique = false;
+  const year = new Date().getFullYear();
+  let attempts = 0;
+  const maxAttempts = 50;
 
-  while (!isUnique) {
-    // Generate roll number with format: HM-YYYY-XXXX (HM for Hunarmand, YYYY for year, XXXX for sequential number)
-    const year = new Date().getFullYear();
-    const randomNum = Math.floor(Math.random() * 9000) + 1000; // 4-digit random number
-    rollNumber = `HM-${year}-${randomNum}`;
+  const yearRegex = new RegExp(`^HM-${year}-\\d{3}-\\d{3}$`);
+  const count = await this.countDocuments({ rollNumber: { $regex: yearRegex } });
 
-    // Check if this roll number already exists
+  while (attempts < maxAttempts) {
+    const sequential = String(count + attempts + 1).padStart(3, '0');
+    const randomNum = Math.floor(Math.random() * 900) + 100;
+    const rollNumber = `HM-${year}-${sequential}-${randomNum}`;
+
     const existingUser = await this.findOne({ rollNumber });
+
     if (!existingUser) {
-      isUnique = true;
+      return rollNumber;
     }
+    attempts++;
   }
 
-  return rollNumber;
+  throw new Error("Could not generate a unique roll number after multiple attempts. Please try again.");
 };
 
 // Hash the password before saving
