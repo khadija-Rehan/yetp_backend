@@ -1,14 +1,14 @@
-const { body, validationResult } = require('express-validator');
+const { body, validationResult } = require("express-validator");
 
 // Validation middleware
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     // Convert validation errors to a more user-friendly format
-    const errorMessages = errors.array().map(error => error.msg);
-    return res.status(400).json({ 
-      message: errorMessages.join(', '),
-      errors: errors.array() // Keep original format for debugging
+    const errorMessages = errors.array().map((error) => error.msg);
+    return res.status(400).json({
+      message: errorMessages.join(", "),
+      errors: errors.array(), // Keep original format for debugging
     });
   }
   next();
@@ -27,25 +27,11 @@ const scholarshipValidation = [
   body("cnic")
     .notEmpty()
     .withMessage("CNIC is required")
-    .customSanitizer(value => value.replace(/[^\d]/g, ""))
+    .customSanitizer((value) => value.replace(/[^\d]/g, ""))
     .matches(/^[0-9]{13}$/)
     .withMessage("CNIC must be 13 digits"),
 
-  body("rollNumber")
-    .notEmpty()
-    .withMessage("Roll number is required")
-    .matches(/^HM-\d{4}-\d{4}$/)
-    .withMessage("Roll number must be in format HM-YYYY-XXXX (e.g., HM-2024-0001)")
-    .custom((value) => {
-      const parts = value.split('-');
-      const year = parseInt(parts[1]);
-      const currentYear = new Date().getFullYear();
-      
-      if (year < 2020 || year > currentYear + 1) {
-        throw new Error(`Roll number year should be between 2020 and ${currentYear + 1}`);
-      }
-      return true;
-    }),
+  body("rollNumber").notEmpty().withMessage("Roll number is required"),
 
   body("email")
     .isEmail()
@@ -57,7 +43,7 @@ const scholarshipValidation = [
   body("mobileNumber")
     .notEmpty()
     .withMessage("Mobile number is required")
-    .customSanitizer(value => value.replace(/[-\s]/g, ""))
+    .customSanitizer((value) => value.replace(/[-\s]/g, ""))
     .matches(/^03\d{9}$/)
     .withMessage("Mobile number must start with 03 and be 11 digits"),
 
@@ -67,7 +53,9 @@ const scholarshipValidation = [
     .isLength({ min: 3, max: 50 })
     .withMessage("Challan number must be between 3 and 50 characters")
     .matches(/^[a-zA-Z0-9\-\s]+$/)
-    .withMessage("Challan number should only contain letters, numbers, hyphens, and spaces"),
+    .withMessage(
+      "Challan number should only contain letters, numbers, hyphens, and spaces"
+    ),
 
   validate,
 ];
@@ -77,7 +65,7 @@ const updateStatusValidation = [
   body("status")
     .notEmpty()
     .withMessage("Status is required")
-    .isIn(['pending', 'approved', 'rejected'])
+    .isIn(["pending", "approved", "rejected"])
     .withMessage("Status must be pending, approved, or rejected"),
 
   validate,
@@ -86,4 +74,4 @@ const updateStatusValidation = [
 module.exports = {
   scholarshipValidation,
   updateStatusValidation,
-}; 
+};
