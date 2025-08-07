@@ -71,7 +71,7 @@ exports.generateAndSendPDF = async (req, res) => {
       message: "PDF generated successfully",
       emailSent: emailResult.success,
       emailError: emailResult.success ? null : emailResult.error,
-      data: { fileName }, // Only send this
+      data: { fileName, challanNumber }, 
     });
 
     // return res.status(200).json({
