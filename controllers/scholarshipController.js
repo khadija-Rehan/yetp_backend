@@ -35,7 +35,7 @@ exports.applyForScholarship = async (req, res) => {
         .json({ message: "Email does not match with registered user" });
     }
 
-    const userChallan = await Challan.findOne({ challanNumber });
+    const userChallan = await Challan.findOne({ challanId: challanNumber });
 
     if (!userChallan) {
       return res.status(400).json({ message: "Challan not found" });
