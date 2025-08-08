@@ -10,6 +10,17 @@ exports.applyForScholarship = async (req, res) => {
     const { fullName, cnic, rollNumber, email, mobileNumber, challanNumber } =
       req.body;
 
+
+
+    // If challanNumber includes "267200309", remove it
+    let processedChallanNumber = challanNumber;
+    if (typeof challanNumber === "string" && challanNumber.includes("267200309")) {
+      processedChallanNumber = challanNumber.replace("267200309", "");
+    }
+
+
+
+      
     // For public scholarship application, we don't require user authentication
     // const userId = req.user._id;
 
@@ -35,7 +46,7 @@ exports.applyForScholarship = async (req, res) => {
         .json({ message: "Email does not match with registered user" });
     }
 
-    const userChallan = await Challan.findOne({ challanId: challanNumber });
+    const userChallan = await Challan.findOne({ challanId: processedChallanNumber });
 
     if (!userChallan) {
       return res.status(400).json({ message: "Challan not found against this user" });
@@ -79,7 +90,7 @@ exports.applyForScholarship = async (req, res) => {
       rollNumber,
       email,
       mobileNumber,
-      challanNumber,
+      challanNumber: processedChallanNumber,
       imagePath,
     });
 
