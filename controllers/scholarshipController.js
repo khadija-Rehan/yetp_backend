@@ -26,7 +26,7 @@ exports.applyForScholarship = async (req, res) => {
     if (!user) {
       return res
         .status(400)
-        .json({ message: "User with this roll number not found" });
+        .json({ message: "User with this CNIC not found" });
     }
 
     if (user.email !== email) {
@@ -38,16 +38,16 @@ exports.applyForScholarship = async (req, res) => {
     const userChallan = await Challan.findOne({ challanId: challanNumber });
 
     if (!userChallan) {
-      return res.status(400).json({ message: "Challan not found" });
+      return res.status(400).json({ message: "Challan not found against this user" });
     }
 
-    if (userChallan.challanId !== challanNumber) {
-      return res
-        .status(400)
-        .json({
-          message: "Challan number does not match with registered user",
-        });
-    }
+    // if (userChallan.challanId !== challanNumber) {
+    //   return res
+    //     .status(400)
+    //     .json({
+    //       message: "Challan number does not match with registered user",
+    //     });
+    // }
 
     const existingApplication = await Scholarship.findOne({ cnic });
     if (existingApplication) {
@@ -59,17 +59,17 @@ exports.applyForScholarship = async (req, res) => {
     }
 
     // Check if scholarship application already exists for this roll number
-    const existingRollNumberApplication = await Scholarship.findOne({
-      rollNumber,
-    });
-    if (existingRollNumberApplication) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Scholarship application already exists for this roll number",
-        });
-    }
+    // const existingRollNumberApplication = await Scholarship.findOne({
+    //   rollNumber,
+    // });
+    // if (existingRollNumberApplication) {
+    //   return res
+    //     .status(400)
+    //     .json({
+    //       message:
+    //         "Scholarship application already exists for this roll number",
+    //     });
+    // }
 
     // Create new scholarship application
     const scholarship = new Scholarship({
