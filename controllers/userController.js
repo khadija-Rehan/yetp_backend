@@ -283,3 +283,85 @@ exports.getUserData = async (req, res) => {
     });
   }
 };
+
+// Admin function to generate PDF for any user by user ID
+exports.adminGenerateAndSendPDF = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    // Validate user ID
+    if (!userId) {
+      return res.status(400).json({
+        status: "error",
+        message: "User ID is required",
+      });
+    }
+
+    // Find user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
+    const amount = 2850;
+
+    // Check if user already has a challan
+    const existingChallan = await Challan.findOne({ userId: user._id });
+
+    if (existingChallan) {
+      // User already has a challan, return existing file URL
+      const fileUrl = `/uploads/${existingChallan.path.split('/').pop()}`;
+      
+      return res.status(200).json({
+        status: "success",
+        message: "Existing challan found",
+        data: { 
+          fileName: existingChallan.path.split('/').pop(),
+          challanNumber: existingChallan.challanId,
+          fileUrl: fileUrl,
+          isExisting: true,
+          createdAt: existingChallan.createdAt,
+          userId: user._id,
+          userEmail: user.email,
+          userName: user.fullName
+        }, 
+      });
+    }
+
+    // Generate new challan
+    const { filePath, fileName, challanNumber } = await generatePDF(
+      user,
+      amount,
+      user.courses
+    );
+
+    // Save challan details to database
+    const challan = new Challan({
+      userId: user._id,
+      challanId: challanNumber,
+      amount: amount,
+      path: filePath,
+    });
+    await challan.save();
+
+    // Read the PDF file
+    return res.status(200).json({
+      status: "success",
+      message: "Challan generated successfully",
+      data: { 
+        challanNumber: challanNumber,
+        fileUrl: filePath,
+      }, 
+    });
+
+  } catch (error) {
+    console.error("Admin PDF generation error:", error);
+    res.status(500).json({ 
+      status: "error",
+      message: error.message 
+    });
+  }
+};
