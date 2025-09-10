@@ -347,10 +347,34 @@ exports.adminGenerateAndSendPDF = async (req, res) => {
     });
     await challan.save();
 
+
+
+
+    const html = getChallanEmailHtml({
+      userName: user.fullName,
+      challanNumber: challanNumber,
+      amount: amount,
+    });
+
+    const emailResult = await sendEmail({
+      email: user.email,
+      subject: "Your Challan is Ready - Hunarmand Punjab",
+      html: html,
+      emailType: 'contact',
+      attachments: [
+        {
+          filename: fileName,
+          path: filePath,
+        },
+      ],
+    });
+
     // Read the PDF file
     return res.status(200).json({
       status: "success",
       message: "Challan generated successfully",
+      emailSent: emailResult.success,
+      emailError: emailResult.success ? null : emailResult.error,
       data: { 
         challanNumber: challanNumber,
         fileUrl: filePath,
