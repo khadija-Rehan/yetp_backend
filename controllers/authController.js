@@ -214,6 +214,9 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+
+    console.log("req.body",req.body.email);
+
     const user = await User.findOne({ email });
 
     if (!user) {
