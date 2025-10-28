@@ -237,6 +237,9 @@ exports.getUserData = async (req, res) => {
         testPassed: userData.testPassed,
         createdAt: userData.createdAt,
         updatedAt: userData.updatedAt,
+        admissionType: userData.admissionType,
+        physicalCourses: userData.physicalCourses,
+      
       },
       challans: {
         total: challans.length,

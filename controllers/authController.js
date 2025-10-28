@@ -13,8 +13,7 @@ const getPasswordChangedEmailHtml = require("../emailTemplates/getPasswordChange
 // Signup function
 exports.signup = async (req, res) => {
   try {
-    // console.log('Files:', req.files);
-    console.log("req.boydddd",req.body);
+    console.log("Signup request body:", req.body);
 
     const {
       email,
@@ -24,50 +23,21 @@ exports.signup = async (req, res) => {
       cnic,
       mobile,
       dateOfBirth,
-      // maritalStatus,
       gender,
       qualification,
-      // fieldOfStudy,
-      // institute,
-      // yearOfCompletion,
-      // internetAccess,
       permanentAddress,
       city,
-      // employmentStatus,
       firstCourse,
       secondCourse,
       referralCode,
+      form = "signup", // Form type: "signup" or "admission"
     } = req.body;
-    console.log("req.boydddd 1");
+
+    // Determine admission type based on form
+    const admissionType = form === "admission" ? "physical" : "online";
 
     // Check if user already exists
-    const existingEmail = await User.findOne({ email });
-    if (existingEmail) {
-      return res.status(400).json({ message: "Email already registered" });
-    }
-    console.log("req.boydddd 2");
-
-    const existingCnic = await User.findOne({ cnic });
-    if (existingCnic) {
-      return res.status(400).json({ message: "CNIC already registered" });
-    }
-    console.log("req.boydddd 3");
-
-    const existingMobile = await User.findOne({ mobile });
-    if (existingMobile) {
-      return res
-        .status(400)
-        .json({ message: "Mobile number already registered" });
-    }
-    console.log("req.boydddd 4");
-
-    // Validate required fields
-    if (!firstCourse) {
-      return res.status(400).json({
-        message: "firstCourse are required fields",
-      });
-    }
-    console.log("req.boydddd 5");
+    let existingUser = await User.findOne({ email });
 
     // Get file URLs from uploaded files
     const cnicFront = req.files["cnicFront"]
@@ -76,22 +46,100 @@ exports.signup = async (req, res) => {
     const cnicBack = req.files["cnicBack"]
       ? `/uploads/${req.files["cnicBack"][0].filename}`
       : null;
-      console.log("req.boydddd 16");
+    const photo = req.files["photo"]
+      ? `/uploads/${req.files["photo"][0].filename}`
+      : null;
 
-    if (!cnicFront || !cnicBack) {
-      return res
-        .status(400)
-        .json({ message: "Both cnicFront and cnicBack files are required" });
+    console.log("cnicFront", cnicFront);
+    // For "physical" admission, cnic is required (along with cnicFront and cnicBack files)
+    if (admissionType === "online") {
+      if (!cnicFront || !cnicBack) {
+        return res
+          .status(400)
+          .json({ message: "Both cnicFront and cnicBack files are required" });
+      }
     }
 
-    console.log("req.boydddd 190");
+    // For "online" admission, photo is required; CNIC is not required at this point
+    if (admissionType === "physical" && !photo) {
+      return res.status(400).json({ message: "Photo file is required" });
+    }
+
+    // If user exists, update their admission type array and password
+    if (existingUser) {
+      if (existingUser.admissionType.length === 2) {
+        return res
+          .status(400)
+          .json({ message: "User already registered in both admission!" });
+      }
+
+      console.log("admissionType", admissionType);
+      console.log("existingUser.admissionType", existingUser.admissionType);
+
+      // Check if admission type is not already in the array
+      if (!existingUser.admissionType.includes(admissionType)) {
+        existingUser.admissionType.push(admissionType);
+      }
+
+      // Update courses based on form type and existing admission types
+      if (form === "signup" && admissionType === "online") {
+        // User is adding online courses
+        existingUser.courses = [firstCourse, secondCourse];
+        existingUser.cnicBack = cnicBack || null;
+        existingUser.cnicFront = cnicFront || null;
+      } else if (form === "admission" && admissionType === "physical") {
+        // User is adding physical courses
+        existingUser.physicalCourses = [firstCourse, secondCourse];
+        existingUser.photo = photo || null;
+      }
+
+      existingUser.password = password;
+      existingUser.markModified("password");
+
+      await existingUser.save();
+
+      return res.status(200).json({
+        message: "User updated successfully",
+        user: {
+          rollNumber: existingUser.rollNumber,
+          email: existingUser.email,
+          fullName: existingUser.fullName,
+          admissionType: existingUser.admissionType,
+
+          isNewUser: false,
+        },
+      });
+    }
+
+    // Check for existing CNIC or mobile if user doesn't exist
+    const existingCnic = await User.findOne({ cnic });
+    if (existingCnic) {
+      return res.status(400).json({ message: "CNIC already registered" });
+    }
+
+    const existingMobile = await User.findOne({ mobile });
+    if (existingMobile) {
+      return res
+        .status(400)
+        .json({ message: "Mobile number already registered" });
+    }
+
+    // Validate required fields
+    if (!firstCourse) {
+      return res.status(400).json({
+        message: "firstCourse is required",
+      });
+    }
+
     // Generate unique roll number
     const rollNumber = await User.generateRollNumber();
-    
-    // Make courses array of string
-    const courses = [firstCourse, secondCourse];
-    
-    console.log("req.boydddd 191");
+
+    // Make courses arrays based on form type
+    const courses =
+      form === "admission" ? undefined : [firstCourse, secondCourse];
+    const physicalCourses =
+      form === "admission" ? [firstCourse, secondCourse] : undefined;
+
     // Create new user with all fields
     const user = new User({
       rollNumber,
@@ -102,31 +150,25 @@ exports.signup = async (req, res) => {
       cnic,
       mobile,
       dateOfBirth,
-      // maritalStatus,
       gender,
       qualification,
-      // institute,
-      // yearOfCompletion,
-      // fieldOfStudy,
-      cnicFront,
-      courses,
-      // internetAccess,
+      cnicFront: cnicFront || null,
+      courses: courses || [],
+      physicalCourses: physicalCourses || [],
       permanentAddress,
       city,
-      // employmentStatus,
-      cnicBack,
+      cnicBack: cnicBack || null,
       referralCode,
+      photo: photo || null,
+      admissionType: [admissionType], // Set based on form type
     });
 
-    console.log("req.boydddd 192");
     // Generate verification token
     const verifyToken = crypto.randomBytes(32).toString("hex");
     user.verifyToken = verifyToken;
     user.isVerified = true;
 
-    console.log("req.boydddd 193");
     await user.save();
-    console.log("req.boydddd 194");
 
     // Send verification email
     // const verifyUrl = `${req.protocol}://${req.get(
@@ -163,8 +205,7 @@ exports.signup = async (req, res) => {
     // }
 
     res.status(201).json({
-      message:
-        "User created successfully. You can login now.",
+      message: "User created successfully. You can login now.",
       emailSent: true,
       user: {
         rollNumber: user.rollNumber,
@@ -172,39 +213,43 @@ exports.signup = async (req, res) => {
         fullName: user.fullName,
         courses: user.courses,
         referralCode: user.referralCode,
+        admissionType: user.admissionType,
+        isNewUser: true,
       },
     });
   } catch (error) {
-    console.error('Signup error:', error);
-    
+    console.error("Signup error:", error);
+
     // Handle different types of errors
-    if (error.name === 'ValidationError') {
-      const validationErrors = Object.values(error.errors).map(err => err.message);
-      return res.status(400).json({ 
-        message: validationErrors.join(', '),
-        errors: validationErrors
+    if (error.name === "ValidationError") {
+      const validationErrors = Object.values(error.errors).map(
+        (err) => err.message
+      );
+      return res.status(400).json({
+        message: validationErrors.join(", "),
+        errors: validationErrors,
       });
     }
-    
+
     if (error.code === 11000) {
       // Duplicate key error
       const field = Object.keys(error.keyValue)[0];
       const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: `${fieldName} already exists`,
-        field: field
+        field: field,
       });
     }
-    
-    if (error.name === 'CastError') {
-      return res.status(400).json({ 
-        message: 'Invalid data format provided'
+
+    if (error.name === "CastError") {
+      return res.status(400).json({
+        message: "Invalid data format provided",
       });
     }
-    
-    res.status(500).json({ 
-      message: 'Server error occurred. Please try again later.',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+
+    res.status(500).json({
+      message: "Server error occurred. Please try again later.",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 };
@@ -214,8 +259,7 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-
-    console.log("req.body",req.body.email);
+    console.log("req.body", req.body.email);
 
     const user = await User.findOne({ email });
 
@@ -279,25 +323,27 @@ exports.login = async (req, res) => {
     });
   } catch (error) {
     console.error("Login error:", error);
-    
+
     // Handle different types of errors
-    if (error.name === 'ValidationError') {
-      const validationErrors = Object.values(error.errors).map(err => err.message);
-      return res.status(400).json({ 
-        message: validationErrors.join(', '),
-        errors: validationErrors
+    if (error.name === "ValidationError") {
+      const validationErrors = Object.values(error.errors).map(
+        (err) => err.message
+      );
+      return res.status(400).json({
+        message: validationErrors.join(", "),
+        errors: validationErrors,
       });
     }
-    
-    if (error.name === 'CastError') {
-      return res.status(400).json({ 
-        message: 'Invalid data format provided'
+
+    if (error.name === "CastError") {
+      return res.status(400).json({
+        message: "Invalid data format provided",
       });
     }
-    
-    res.status(500).json({ 
-      message: 'Server error occurred. Please try again later.',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+
+    res.status(500).json({
+      message: "Server error occurred. Please try again later.",
+      error: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 };
@@ -330,7 +376,7 @@ exports.forgotPassword = async (req, res) => {
       email: user.email,
       subject: "Password Reset Request - Hunarmand Punjab",
       html: html,
-      emailType: 'contact',
+      emailType: "contact",
     });
 
     if (!emailResult.success) {
@@ -339,9 +385,10 @@ exports.forgotPassword = async (req, res) => {
       user.resetPasswordExpire = undefined;
       await user.save({ validateBeforeSave: false });
 
-      return res.status(500).json({ 
-        message: "Password reset email could not be sent. Please try again later.",
-        emailError: emailResult.error
+      return res.status(500).json({
+        message:
+          "Password reset email could not be sent. Please try again later.",
+        emailError: emailResult.error,
       });
     }
 
@@ -384,13 +431,13 @@ exports.resetPassword = async (req, res) => {
       email: user.email,
       subject: "Password Changed Successfully - Hunarmand Punjab",
       html: html,
-      emailType: 'contact',
+      emailType: "contact",
     });
 
-    res.status(200).json({ 
+    res.status(200).json({
       message: "Password reset successful",
       emailSent: emailResult.success,
-      emailError: emailResult.success ? null : emailResult.error
+      emailError: emailResult.success ? null : emailResult.error,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -425,13 +472,16 @@ exports.verifyEmail = async (req, res) => {
     //   html: verificationHtml,
     //   emailType: 'verification',
     // });
-    
+
     // Even if email fails, the verification is successful, so redirect
     // but we could log the email failure for monitoring
     if (!emailResult.success) {
-      console.error('Email verification confirmation failed:', emailResult.error);
+      console.error(
+        "Email verification confirmation failed:",
+        emailResult.error
+      );
     }
-    
+
     return res.redirect("https://hunarmandpunjab.pk/login");
   } catch (error) {
     return res.status(500).json({ message: error.message });

@@ -39,6 +39,7 @@ const upload = multer({
 const uploadFields = upload.fields([
   { name: 'cnicFront', maxCount: 1 },
   { name: 'cnicBack', maxCount: 1 },
+  { name: 'photo', maxCount: 1 },
 ]);
 
 module.exports = uploadFields;

@@ -51,11 +51,15 @@ const userSchema = new mongoose.Schema(
     },
     cnicBack: {
       type: String, // URL to the uploaded file
-      required: true,
+      default: null,
     },
     courses: {
       type: [String],
-      required: true,
+      default: [],
+    },
+    physicalCourses: {
+      type: [String],
+      default: [],
     },
     permanentAddress: {
       type: String,
@@ -67,7 +71,7 @@ const userSchema = new mongoose.Schema(
     },
     cnicFront: {
       type: String, // URL to the uploaded file
-      required: true,
+      default: null,
     },
     isVerified: {
       type: Boolean,
@@ -91,6 +95,15 @@ const userSchema = new mongoose.Schema(
     referralCode: {
       type: String,
       allowNull: true,
+    },
+    photo: {
+      type: String,
+      default: null,
+    },
+    admissionType: {
+      type: [String],
+      enum: ["online", "physical"],
+      default: ["online"],
     },
   },
   {

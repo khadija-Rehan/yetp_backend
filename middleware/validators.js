@@ -77,20 +77,20 @@ const signupValidation = [
   //   .isInt({ min: 1900, max: new Date().getFullYear() })
   //   .withMessage("Invalid year of completion"),
 
-  body("courses")
-    .customSanitizer((value) => {
-      try {
-        return typeof value === "string" ? JSON.parse(value) : value;
-      } catch {
-        return [];
-      }
-    })
-    .isArray({ min: 1 })
-    .withMessage("Courses must be a non-empty array")
-    .custom((arr) =>
-      arr.every((item) => typeof item === "string" && item.trim() !== "")
-    )
-    .withMessage("Each course must be a non-empty string"),
+  // body("courses")
+  //   .customSanitizer((value) => {
+  //     try {
+  //       return typeof value === "string" ? JSON.parse(value) : value;
+  //     } catch {
+  //       return [];
+  //     }
+  //   })
+  //   .isArray({ min: 1 })
+  //   .withMessage("Courses must be a non-empty array")
+  //   .custom((arr) =>
+  //     arr.every((item) => typeof item === "string" && item.trim() !== "")
+  //   )
+  //   .withMessage("Each course must be a non-empty string"),
 
   // body("internetAccess")
   //   .notEmpty()
@@ -105,19 +105,46 @@ const signupValidation = [
   //   .withMessage("Employed must be a boolean value"),
 
   // Add file validation
-  body("cnicFront").custom((value, { req }) => {
-    if (!req.files || !req.files["cnicFront"]) {
-      throw new Error("Last degree document is required");
+  // body("cnicFront").custom((value, { req }) => {
+  //   if (!req.files || !req.files["cnicFront"]) {
+  //     throw new Error("CNIC front document is required");
+  //   }
+  //   return true;
+  // }),
+
+  // body("cnicBack").custom((value, { req }) => {
+  //   if (!req.files || !req.files["cnicBack"]) {
+  //     throw new Error("CNIC back document is required");
+  //   }
+  //   return true;
+  // }),
+
+  // Validate courses based on form type
+  body("form").custom((value, { req }) => {
+    const form = value || req.body.form || "signup"; // Default to signup
+    
+    if (form === "admission") {
+      // For physical admission, check for firstCourse and secondCourse (will be stored as physicalCourses)
+      if (!req.body.firstCourse || !req.body.secondCourse) {
+        throw new Error("Both firstCourse and secondCourse are required for physical admission");
+      }
+    } else if (form === "signup") {
+      // For online signup, check for firstCourse and secondCourse (will be stored as courses)
+      if (!req.body.firstCourse || !req.body.secondCourse) {
+        throw new Error("Both firstCourse and secondCourse are required for online signup");
+      }
     }
+    
     return true;
   }),
 
-  body("cnicBack").custom((value, { req }) => {
-    if (!req.files || !req.files["cnicBack"]) {
-      throw new Error("Document is required");
-    }
-    return true;
-  }),
+  body("firstCourse")
+    .notEmpty()
+    .withMessage("First course is required"),
+
+  body("secondCourse")
+    .notEmpty()
+    .withMessage("Second course is required"),
 
   validate,
 ];
