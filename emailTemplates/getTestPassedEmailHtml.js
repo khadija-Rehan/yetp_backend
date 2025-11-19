@@ -51,7 +51,7 @@ function getTestPassedEmailHtml({ userName, testScore, rollNumber, bannerUrl }) 
             <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <h3 style="color: #856404; margin-top: 0;">📋 Next Steps to Claim Your Scholarship Card:</h3>
               <ol style="font-size: 14px; color: #856404; padding-left: 20px;">
-                <li><strong>Submit the Application Processing Fee:</strong> To Claim your Scholarship Card and confirm your seat, please pay the one-time processing fee of PKR 2850.</li>
+                <li><strong>Submit the Application Processing Fee:</strong> To Claim your Scholarship Card and confirm your seat, please pay the one-time processing fee of PKR 3250.</li>
                 <li><strong>This fee covers the processing and issuance of your Scholarship Card.</strong></li>
                 <li><strong>All your selected courses are 100% free of cost — there are no tuition fees.</strong></li>
               </ol>

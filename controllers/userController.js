@@ -309,7 +309,7 @@ exports.adminGenerateAndSendPDF = async (req, res) => {
       });
     }
 
-    const amount = 2850;
+    const amount = 3250;
 
     // Check if user already has a challan
     const existingChallan = await Challan.findOne({ userId: user._id });
