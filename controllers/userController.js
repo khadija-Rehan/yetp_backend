@@ -20,7 +20,7 @@ exports.generateAndSendPDF = async (req, res) => {
       });
     }
 
-    const amount = 2850;
+    const amount = 3250;
 
     const { filePath, fileName, challanNumber } = await generatePDF(
       user,
