@@ -392,3 +392,65 @@ exports.adminGenerateAndSendPDF = async (req, res) => {
     });
   }
 };
+
+// Update second enrolled courses
+exports.updateSecondEnrolledCourses = async (req, res) => {
+  try {
+    const { courses } = req.body;
+    const user = req.user;
+
+    // Validate input
+    if (!courses) {
+      return res.status(400).json({
+        status: "error",
+        message: "Courses array is required",
+      });
+    }
+
+    // Validate that courses is an array
+    if (!Array.isArray(courses)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Courses must be an array",
+      });
+    }
+
+    // Validate that all items in the array are strings
+    if (!courses.every((course) => typeof course === "string" && course.trim() !== "")) {
+      return res.status(400).json({
+        status: "error",
+        message: "All courses must be non-empty strings",
+      });
+    }
+
+    // Update user's secondEnrolledCourses
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      {
+        secondEnrolledCourses: courses,
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "Second enrolled courses updated successfully",
+      data: {
+        secondEnrolledCourses: updatedUser.secondEnrolledCourses,
+      },
+    });
+  } catch (error) {
+    console.error("Update second enrolled courses error:", error);
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+};

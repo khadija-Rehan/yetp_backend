@@ -171,8 +171,24 @@ const forgotPasswordValidation = [
   validate,
 ];
 
+// Second enrolled courses validation rules
+const secondEnrolledCoursesValidation = [
+  body("courses")
+    .notEmpty()
+    .withMessage("Courses array is required")
+    .isArray({ min: 1 })
+    .withMessage("Courses must be a non-empty array")
+    .custom((arr) =>
+      arr.every((item) => typeof item === "string" && item.trim() !== "")
+    )
+    .withMessage("All courses must be non-empty strings"),
+
+  validate,
+];
+
 module.exports = {
   signupValidation,
   loginValidation,
   forgotPasswordValidation,
+  secondEnrolledCoursesValidation,
 };
