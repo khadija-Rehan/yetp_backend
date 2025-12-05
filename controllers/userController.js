@@ -9,7 +9,10 @@ const getChallanEmailHtml = require("../emailTemplates/getChallanEmailHtml");
 
 exports.generateAndSendPDF = async (req, res) => {
   try {
-    // const { userCourses } = req.body;
+    const isSecondEnroll = req.params.isSecondEnroll || false;
+
+
+    console.log("isSecondEnroll", typeof isSecondEnroll, isSecondEnroll);
     const user = req.user;
 
     // Validate user object
@@ -22,11 +25,32 @@ exports.generateAndSendPDF = async (req, res) => {
 
     const amount = 3250;
 
+
+
+    console.log("user courses", user.courses, "second enrolled courses", user.secondEnrolledCourses);
+    
+
+    const userCourses = isSecondEnroll === "true"
+      ? user.secondEnrolledCourses
+      : user.courses;
+
+
+
+
+
+
+
+    console.log("userCourses", userCourses);
+
     const { filePath, fileName, challanNumber } = await generatePDF(
       user,
       amount,
-      user.courses
+      userCourses,
     );
+
+    // const secondEnrollChallan = isSecondEnroll ? false : true;
+
+    // console.log("secondEnrollChallan", secondEnrollChallan);
 
     // Save challan details to database
     const challan = new Challan({
@@ -34,6 +58,7 @@ exports.generateAndSendPDF = async (req, res) => {
       challanId: challanNumber,
       amount: amount,
       path: filePath,
+      secondEnrollChallan: isSecondEnroll === "true" ? true : false,
     });
     await challan.save();
 
@@ -48,7 +73,7 @@ exports.generateAndSendPDF = async (req, res) => {
       email: user.email,
       subject: "Your Challan is Ready - Hunarmand Punjab",
       html: html,
-      emailType: 'contact',
+      emailType: "contact",
       attachments: [
         {
           filename: fileName,
@@ -71,7 +96,7 @@ exports.generateAndSendPDF = async (req, res) => {
       message: "PDF generated successfully",
       emailSent: emailResult.success,
       emailError: emailResult.success ? null : emailResult.error,
-      data: { fileName, challanNumber }, 
+      data: { fileName, challanNumber },
     });
 
     // return res.status(200).json({
@@ -144,7 +169,7 @@ exports.updateTestScore = async (req, res) => {
         subject:
           "Congratulations! You Have Passed the Admission Test – Now You Are Eligible For Hunarmand Punjab Scholarship Card",
         html: testPassedHtml,
-        emailType: 'admissions',
+        emailType: "admissions",
       });
 
       return res.status(200).json({
@@ -229,6 +254,7 @@ exports.getUserData = async (req, res) => {
         gender: userData.gender,
         qualification: userData.qualification,
         courses: userData.courses,
+        secondEnrolledCourses: userData.secondEnrolledCourses,
         permanentAddress: userData.permanentAddress,
         city: userData.city,
         isVerified: userData.isVerified,
@@ -239,7 +265,6 @@ exports.getUserData = async (req, res) => {
         updatedAt: userData.updatedAt,
         admissionType: userData.admissionType,
         physicalCourses: userData.physicalCourses,
-      
       },
       challans: {
         total: challans.length,
@@ -253,6 +278,7 @@ exports.getUserData = async (req, res) => {
           branchCode: challan.branchCode,
           txnId: challan.txnId,
           txnDate: challan.txnDate,
+          secondEnrollChallan: challan.secondEnrollChallan,
           createdAt: challan.createdAt,
           updatedAt: challan.updatedAt,
         })),
@@ -316,21 +342,21 @@ exports.adminGenerateAndSendPDF = async (req, res) => {
 
     if (existingChallan) {
       // User already has a challan, return existing file URL
-      const fileUrl = `/uploads/${existingChallan.path.split('/').pop()}`;
-      
+      const fileUrl = `/uploads/${existingChallan.path.split("/").pop()}`;
+
       return res.status(200).json({
         status: "success",
         message: "Existing challan found",
-        data: { 
-          fileName: existingChallan.path.split('/').pop(),
+        data: {
+          fileName: existingChallan.path.split("/").pop(),
           challanNumber: existingChallan.challanId,
           fileUrl: fileUrl,
           isExisting: true,
           createdAt: existingChallan.createdAt,
           userId: user._id,
           userEmail: user.email,
-          userName: user.fullName
-        }, 
+          userName: user.fullName,
+        },
       });
     }
 
@@ -350,9 +376,6 @@ exports.adminGenerateAndSendPDF = async (req, res) => {
     });
     await challan.save();
 
-
-
-
     const html = getChallanEmailHtml({
       userName: user.fullName,
       challanNumber: challanNumber,
@@ -363,7 +386,7 @@ exports.adminGenerateAndSendPDF = async (req, res) => {
       email: user.email,
       subject: "Your Challan is Ready - Hunarmand Punjab",
       html: html,
-      emailType: 'contact',
+      emailType: "contact",
       attachments: [
         {
           filename: fileName,
@@ -378,17 +401,16 @@ exports.adminGenerateAndSendPDF = async (req, res) => {
       message: "Challan generated successfully",
       emailSent: emailResult.success,
       emailError: emailResult.success ? null : emailResult.error,
-      data: { 
+      data: {
         challanNumber: challanNumber,
         fileUrl: filePath,
-      }, 
+      },
     });
-
   } catch (error) {
     console.error("Admin PDF generation error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       status: "error",
-      message: error.message 
+      message: error.message,
     });
   }
 };
@@ -416,7 +438,11 @@ exports.updateSecondEnrolledCourses = async (req, res) => {
     }
 
     // Validate that all items in the array are strings
-    if (!courses.every((course) => typeof course === "string" && course.trim() !== "")) {
+    if (
+      !courses.every(
+        (course) => typeof course === "string" && course.trim() !== ""
+      )
+    ) {
       return res.status(400).json({
         status: "error",
         message: "All courses must be non-empty strings",

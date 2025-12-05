@@ -9,7 +9,7 @@ const router = express.Router();
 router.use(authMiddleware);
 
 // PDF generation route
-router.post('/generate-pdf', generateAndSendPDF);
+router.post('/generate-pdf/:isSecondEnroll', generateAndSendPDF);
 
 // Test score update route
 router.post('/test', updateTestScore);
