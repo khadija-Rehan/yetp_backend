@@ -1,6 +1,7 @@
 const express = require('express');
-const { generateAndSendPDF, updateTestScore, getUserData } = require('../controllers/userController');
+const { generateAndSendPDF, updateTestScore, getUserData, updateSecondEnrolledCourses } = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
+const { secondEnrolledCoursesValidation } = require('../middleware/validators');
 
 const router = express.Router();
 
@@ -8,12 +9,15 @@ const router = express.Router();
 router.use(authMiddleware);
 
 // PDF generation route
-router.post('/generate-pdf', generateAndSendPDF);
+router.post('/generate-pdf/:isSecondEnroll', generateAndSendPDF);
 
 // Test score update route
 router.post('/test', updateTestScore);
 
 // Get user data route
 router.get('/profile', getUserData);
+
+// Update second enrolled courses route
+router.post('/second-enrolled-courses', secondEnrolledCoursesValidation, updateSecondEnrolledCourses);
 
 module.exports = router; 

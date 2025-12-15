@@ -30,6 +30,10 @@ const challanSchema = new mongoose.Schema(
     path: {
       type: String,
     },
+    secondEnrollChallan: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

@@ -57,6 +57,10 @@ const userSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    secondEnrolledCourses: {
+      type: [String],
+      default: [],
+    },
     physicalCourses: {
       type: [String],
       default: [],
