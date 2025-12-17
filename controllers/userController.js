@@ -69,9 +69,14 @@ exports.generateAndSendPDF = async (req, res) => {
       amount: amount,
     });
 
+
+    const emailSubject = isSecondEnroll === "true"  
+      ? "Your Second Enrollment Challan is Ready - Hunarmand Punjab"
+      : "Your Challan is Ready - Hunarmand Punjab";
+
     const emailResult = await sendEmail({
       email: user.email,
-      subject: "Your Challan is Ready - Hunarmand Punjab",
+      subject: emailSubject,
       html: html,
       emailType: "contact",
       attachments: [
