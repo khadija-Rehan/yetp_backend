@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Challan = require("../models/Challan");
+const TeleChallan = require("../models/TeleChallan");
 
 exports.inquery = async (req, res) => {
   try {
@@ -126,6 +127,14 @@ exports.postPay = async (req, res) => {
     challan.branchCode = branchCode;
     challan.txnDate = txnDate;
     await challan.save();
+
+
+    const telechallan = await TeleChallan.findOne({ originalChallanId: challan._id });
+    if (telechallan) {
+      telechallan.status = "resolved";
+      telechallan.challanData.paid = true;
+      await telechallan.save();
+    }
 
     return res.status(200).json({
       message: "Payment processed successfully",
