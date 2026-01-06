@@ -9,6 +9,11 @@ const userSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
+    secondRollNumber: {
+      type: String,
+      unique: true,
+      required: false,
+    },
     email: {
       type: String,
       required: true,
@@ -116,28 +121,43 @@ const userSchema = new mongoose.Schema(
 );
 
 // Generate unique roll number
-userSchema.statics.generateRollNumber = async function () {
+userSchema.statics.generateRollNumber = async function (
+  isSecondEnroll = false
+) {
   const year = new Date().getFullYear();
   let attempts = 0;
   const maxAttempts = 50;
 
-  const yearRegex = new RegExp(`^HM-${year}-\\d{3}-\\d{3}$`);
-  const count = await this.countDocuments({ rollNumber: { $regex: yearRegex } });
+  // Regex for existing roll numbers in this year
+  const yearRegex = new RegExp(`^HM(-B2)?-${year}-\\d{3}-\\d{3}`);
+
+  // Count how many roll numbers exist this year
+  const count = await this.countDocuments({
+    rollNumber: { $regex: yearRegex },
+  });
 
   while (attempts < maxAttempts) {
-    const sequential = String(count + attempts + 1).padStart(3, '0');
-    const randomNum = Math.floor(Math.random() * 900) + 100;
-    const rollNumber = `HM-${year}-${sequential}-${randomNum}`;
+    const sequential = String(count + attempts + 1).padStart(3, "0");
+    const randomNum = Math.floor(Math.random() * 900) + 100; // 100-999
 
+    // Insert B2 immediately after HM if second enrollment
+    let rollNumber = "HM";
+    if (isSecondEnroll) rollNumber += "-B2";
+
+    rollNumber += `-${year}-${sequential}-${randomNum}`;
+
+    // Ensure uniqueness
     const existingUser = await this.findOne({ rollNumber });
-
     if (!existingUser) {
       return rollNumber;
     }
+
     attempts++;
   }
 
-  throw new Error("Could not generate a unique roll number after multiple attempts. Please try again.");
+  throw new Error(
+    "Could not generate a unique roll number after multiple attempts. Please try again."
+  );
 };
 
 // Hash the password before saving

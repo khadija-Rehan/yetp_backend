@@ -11,7 +11,6 @@ exports.generateAndSendPDF = async (req, res) => {
   try {
     const isSecondEnroll = req.params.isSecondEnroll || false;
 
-
     console.log("isSecondEnroll", typeof isSecondEnroll, isSecondEnroll);
     const user = req.user;
 
@@ -25,27 +24,22 @@ exports.generateAndSendPDF = async (req, res) => {
 
     const amount = 3250;
 
+    console.log(
+      "user courses",
+      user.courses,
+      "second enrolled courses",
+      user.secondEnrolledCourses
+    );
 
-
-    console.log("user courses", user.courses, "second enrolled courses", user.secondEnrolledCourses);
-    
-
-    const userCourses = isSecondEnroll === "true"
-      ? user.secondEnrolledCourses
-      : user.courses;
-
-
-
-
-
-
+    const userCourses =
+      isSecondEnroll === "true" ? user.secondEnrolledCourses : user.courses;
 
     console.log("userCourses", userCourses);
 
     const { filePath, fileName, challanNumber } = await generatePDF(
       user,
       amount,
-      userCourses,
+      userCourses
     );
 
     // const secondEnrollChallan = isSecondEnroll ? false : true;
@@ -69,10 +63,10 @@ exports.generateAndSendPDF = async (req, res) => {
       amount: amount,
     });
 
-
-    const emailSubject = isSecondEnroll === "true"  
-      ? "Your Second Enrollment Challan is Ready - Hunarmand Punjab"
-      : "Your Challan is Ready - Hunarmand Punjab";
+    const emailSubject =
+      isSecondEnroll === "true"
+        ? "Your Second Enrollment Challan is Ready - Hunarmand Punjab"
+        : "Your Challan is Ready - Hunarmand Punjab";
 
     const emailResult = await sendEmail({
       email: user.email,
@@ -454,11 +448,16 @@ exports.updateSecondEnrolledCourses = async (req, res) => {
       });
     }
 
+    const rollNumber = await User.generateRollNumber(true);
+
+    console.log("rollNumber", rollNumber);
+
     // Update user's secondEnrolledCourses
     const updatedUser = await User.findByIdAndUpdate(
       user._id,
       {
         secondEnrolledCourses: courses,
+        secondRollNumber: rollNumber,
       },
       { new: true, runValidators: true }
     );
@@ -475,6 +474,7 @@ exports.updateSecondEnrolledCourses = async (req, res) => {
       message: "Second enrolled courses updated successfully",
       data: {
         secondEnrolledCourses: updatedUser.secondEnrolledCourses,
+        secondRollNumber: updatedUser.secondRollNumber,
       },
     });
   } catch (error) {
