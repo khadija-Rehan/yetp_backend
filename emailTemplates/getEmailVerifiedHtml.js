@@ -1,5 +1,5 @@
 function getEmailVerifiedHtml({ userName, rollNumber }) {
-    return `
+  return `
     <!DOCTYPE html>
     <html>
     <head>
@@ -78,7 +78,7 @@ function getEmailVerifiedHtml({ userName, rollNumber }) {
             </div>
 
             <p style="font-size: 14px; color: #999999;">
-              For any questions or support, please contact our team at <a href="mailto:support@hunarmandpunjab.pk" style="color: #007bff;">support@hunarmandpunjab.pk</a>
+              For any questions or support, please contact our team at <a href="mailto:support@hunarmandpunjab.org.pk" style="color: #007bff;">support@hunarmandpunjab.org.pk</a>
             </p>
 
             <p style="font-size: 16px; color: #555555;">
@@ -91,6 +91,6 @@ function getEmailVerifiedHtml({ userName, rollNumber }) {
     </body>
     </html>
     `;
-  }
-  
-  module.exports = getEmailVerifiedHtml; 
+}
+
+module.exports = getEmailVerifiedHtml;

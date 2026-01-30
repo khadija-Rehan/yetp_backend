@@ -1,5 +1,11 @@
-function getScholarshipSubmissionEmailHtml({ userName, rollNumber, scholarshipId, submissionTime, bannerUrl }) {
-    return `
+function getScholarshipSubmissionEmailHtml({
+  userName,
+  rollNumber,
+  scholarshipId,
+  submissionTime,
+  bannerUrl,
+}) {
+  return `
     <!DOCTYPE html>
     <html>
     <head>
@@ -70,7 +76,7 @@ function getScholarshipSubmissionEmailHtml({ userName, rollNumber, scholarshipId
             <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <h4 style="color: #333333; margin-top: 0;">📞 Need Help?</h4>
               <p style="font-size: 14px; color: #555; margin: 0;">
-                If you have any questions about your application, please don't hesitate to contact our support team at <a href="mailto:support@hunarmandpunjab.pk" style="color: #007bff;">support@hunarmandpunjab.pk</a>
+                If you have any questions about your application, please don't hesitate to contact our support team at <a href="mailto:support@hunarmandpunjab.org.pk" style="color: #007bff;">support@hunarmandpunjab.org.pk</a>
               </p>
             </div>
 
@@ -84,7 +90,6 @@ function getScholarshipSubmissionEmailHtml({ userName, rollNumber, scholarshipId
     </body>
     </html>
     `;
-  }
-  
-  module.exports = getScholarshipSubmissionEmailHtml;
-  
+}
+
+module.exports = getScholarshipSubmissionEmailHtml;

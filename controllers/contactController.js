@@ -94,10 +94,10 @@ exports.contactUs = async (req, res) => {
 
     // Send email to admin
     const adminEmailResult = await sendEmail({
-      email: process.env.ADMIN_EMAIL || "contact@hunarmandpunjab.pk",
+      email: process.env.ADMIN_EMAIL || "contact@hunarmandpunjab.org.pk",
       subject: `New Contact Form Submission: ${subject}`,
       html: adminEmailHtml,
-      emailType: 'contact',
+      emailType: "contact",
     });
 
     // Send confirmation email to user
@@ -152,7 +152,7 @@ exports.contactUs = async (req, res) => {
             <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <h4 style="color: #856404; margin-top: 0;">📞 Need Immediate Assistance?</h4>
               <p style="font-size: 14px; color: #856404; margin: 0;">
-                For urgent matters, you can also contact us directly at <a href="mailto:support@hunarmandpunjab.pk" style="color: #079560;">support@hunarmandpunjab.pk</a> or call our helpline.
+                For urgent matters, you can also contact us directly at <a href="mailto:support@hunarmandpunjab.org.pk" style="color: #079560;">support@hunarmandpunjab.org.pk</a> or call our helpline.
               </p>
             </div>
 
@@ -177,7 +177,7 @@ exports.contactUs = async (req, res) => {
       email: email,
       subject: "Thank You for Contacting Hunarmand Punjab",
       html: userEmailHtml,
-      emailType: 'contact',
+      emailType: "contact",
     });
 
     // Check if both emails were sent successfully
@@ -189,23 +189,28 @@ exports.contactUs = async (req, res) => {
       return res.status(500).json({
         status: "error",
         message: "Failed to send message. Please try again later.",
-        emailError: "Both admin notification and user confirmation emails failed to send"
+        emailError:
+          "Both admin notification and user confirmation emails failed to send",
       });
     } else if (!adminEmailSent) {
       // Only admin email failed
       return res.status(200).json({
         status: "success",
-        message: "Your message has been sent successfully. We'll get back to you soon!",
-        warning: "Admin notification email failed to send, but your message was received",
-        adminEmailError: adminEmailResult.error
+        message:
+          "Your message has been sent successfully. We'll get back to you soon!",
+        warning:
+          "Admin notification email failed to send, but your message was received",
+        adminEmailError: adminEmailResult.error,
       });
     } else if (!userEmailResult.success) {
       // Only user email failed
       return res.status(200).json({
         status: "success",
-        message: "Your message has been sent successfully. We'll get back to you soon!",
-        warning: "Confirmation email failed to send, but your message was received",
-        userEmailError: userEmailResult.error
+        message:
+          "Your message has been sent successfully. We'll get back to you soon!",
+        warning:
+          "Confirmation email failed to send, but your message was received",
+        userEmailError: userEmailResult.error,
       });
     }
 

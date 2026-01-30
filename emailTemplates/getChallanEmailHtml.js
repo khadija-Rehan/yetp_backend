@@ -1,5 +1,5 @@
 function getChallanEmailHtml({ userName, challanNumber, amount, bannerUrl }) {
-    return `
+  return `
     <!DOCTYPE html>
     <html>
     <head>
@@ -81,7 +81,7 @@ function getChallanEmailHtml({ userName, challanNumber, amount, bannerUrl }) {
             <div style="background-color: #e9f7ef; border: 1px solid #b2f0c0; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <h4 style="color: #155724; margin-top: 0;">📞 Need Help?</h4>
               <p style="font-size: 14px; color: #155724; margin: 0;">
-                If you have any questions about the payment process or need assistance, please contact our support team at <a href="mailto:support@hunarmandpunjab.pk" style="color: #079560;">support@hunarmandpunjab.pk</a>
+                If you have any questions about the payment process or need assistance, please contact our support team at <a href="mailto:support@hunarmandpunjab.org.pk" style="color: #079560;">support@hunarmandpunjab.org.pk</a>
               </p>
             </div>
 
@@ -99,6 +99,6 @@ function getChallanEmailHtml({ userName, challanNumber, amount, bannerUrl }) {
     </body>
     </html>
     `;
-  }
-  
-  module.exports = getChallanEmailHtml; 
+}
+
+module.exports = getChallanEmailHtml;
