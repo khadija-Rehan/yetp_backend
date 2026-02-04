@@ -299,7 +299,7 @@ exports.login = async (req, res) => {
     const html = getUserLoginEmailHtml({
       userName: user.fullName,
       loginTime: new Date().toLocaleString(),
-      dashboardUrl: "https://hunarmandpunjab.pk/login",
+      dashboardUrl: "https://hunarmandpunjab.org.pk/login",
     });
 
     // Remove login email - as per requirements, don't send email on login
@@ -365,7 +365,7 @@ exports.forgotPassword = async (req, res) => {
 
     // Create reset url
     // const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
-    const resetUrl = `https://hunarmandpunjab.pk/reset-password/${resetToken}`;
+    const resetUrl = `https://hunarmandpunjab.org.pk/reset-password/${resetToken}`;
 
     const html = getForgotPasswordEmailHtml({
       userName: user.fullName,
@@ -482,7 +482,7 @@ exports.verifyEmail = async (req, res) => {
       );
     }
 
-    return res.redirect("https://hunarmandpunjab.pk/login");
+    return res.redirect("https://hunarmandpunjab.org.pk/login");
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

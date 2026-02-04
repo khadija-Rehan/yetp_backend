@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const Challan = require("../models/Challan");
 const TeleChallan = require("../models/TeleChallan");
+const sendEmail = require("../utils/sendEmail");
+const getPaymentConfirmationEmailHtml = require("../emailTemplates/getPaymentConfirmationEmailHtml");
 
 exports.inquery = async (req, res) => {
   try {
@@ -37,7 +39,6 @@ exports.inquery = async (req, res) => {
         fatherName: null,
       });
     }
-
 
     if (!user) {
       return res.status(200).json({
@@ -128,12 +129,36 @@ exports.postPay = async (req, res) => {
     challan.txnDate = txnDate;
     await challan.save();
 
-
-    const telechallan = await TeleChallan.findOne({ originalChallanId: challan._id });
+    const telechallan = await TeleChallan.findOne({
+      originalChallanId: challan._id,
+    });
     if (telechallan) {
       telechallan.status = "resolved";
       telechallan.challanData.paid = true;
       await telechallan.save();
+    }
+
+    // Send email notification to user
+    // Send email notification to user
+    try {
+      const user = await User.findById(challan.userId);
+      if (user && user.email) {
+        await sendEmail({
+          email: user.email,
+          subject: "Payment Confirmation - Hunarmand",
+          message: `Dear ${user.fullName},\n\nYour challan payment of PKR ${amount} has been successfully received.\n\nChallan ID: ${challanId}\nTransaction ID: ${txnId}\nDate: ${txnDate}\n\nThank you,\nHunarmand Team`,
+          html: getPaymentConfirmationEmailHtml({
+            fullName: user.fullName,
+            challanId,
+            amount,
+            txnId,
+            date: txnDate,
+          }),
+        });
+      }
+    } catch (emailError) {
+      console.error("Failed to send payment email:", emailError);
+      // Continue execution, don't fail the request because of email error
     }
 
     return res.status(200).json({

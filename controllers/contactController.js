@@ -112,7 +112,7 @@ exports.contactUs = async (req, res) => {
       <table align="center" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
         <tr>
           <td style="text-align: center;">
-            <img src="https://hunarmandpunjab.pk/images/email_banner.png" alt="Hunarmand Punjab" style="width: 100%; max-width: 600px;" />
+            <img src="https://hunarmandpunjab.org.pk/images/email_banner.png" alt="Hunarmand Punjab" style="width: 100%; max-width: 600px;" />
           </td>
         </tr>
         <tr>
@@ -157,7 +157,7 @@ exports.contactUs = async (req, res) => {
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://hunarmandpunjab.pk" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
+              <a href="https://hunarmandpunjab.org.pk" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
                 Visit Our Website
               </a>
             </div>

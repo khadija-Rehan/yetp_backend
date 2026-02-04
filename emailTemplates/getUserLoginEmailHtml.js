@@ -1,5 +1,5 @@
 function getUserLoginEmailHtml({ userName, loginTime, dashboardUrl }) {
-    return `
+  return `
     <!DOCTYPE html>
     <html>
     <head>
@@ -10,7 +10,7 @@ function getUserLoginEmailHtml({ userName, loginTime, dashboardUrl }) {
       <table align="center" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
         <tr>
           <td style="text-align: center;">
-            <img src="https://hunarmandpunjab.pk/images/email_banner.png" alt="Hunarmand Punjab" style="width: 100%; max-width: 600px;" />
+            <img src="https://hunarmandpunjab.org.pk/images/email_banner.png" alt="Hunarmand Punjab" style="width: 100%; max-width: 600px;" />
           </td>
         </tr>
         <tr>
@@ -28,7 +28,7 @@ function getUserLoginEmailHtml({ userName, loginTime, dashboardUrl }) {
             </p>
   
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://hunarmandpunjab.pk" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+              <a href="https://hunarmandpunjab.org.pk" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
                 Go to Dashboard
               </a>
             </div>
@@ -43,7 +43,6 @@ function getUserLoginEmailHtml({ userName, loginTime, dashboardUrl }) {
     </body>
     </html>
     `;
-  }
-  
-  module.exports = getUserLoginEmailHtml;
-  
+}
+
+module.exports = getUserLoginEmailHtml;
