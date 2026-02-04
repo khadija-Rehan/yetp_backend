@@ -132,7 +132,7 @@ exports.signup = async (req, res) => {
     }
 
     // Generate unique roll number
-    const rollNumber = await User.generateRollNumber();
+    const rollNumber = await User.generateRollNumber(true);
 
     // Make courses arrays based on form type
     const courses =
