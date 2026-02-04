@@ -72,7 +72,7 @@ exports.generateAndSendPDF = async (req, res) => {
       email: user.email,
       subject: emailSubject,
       html: html,
-      emailType: "contact",
+      emailType: "admissions",
       attachments: [
         {
           filename: fileName,

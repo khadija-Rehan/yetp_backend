@@ -154,6 +154,7 @@ exports.postPay = async (req, res) => {
             txnId,
             date: txnDate,
           }),
+          emailType: "admissions",
         });
       }
     } catch (emailError) {

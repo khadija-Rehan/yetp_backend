@@ -5,15 +5,15 @@ const sendEmail = async (options) => {
   try {
     // Determine which email configuration to use based on email type
     let emailConfig;
-    
+
     switch (options.emailType) {
-      case 'verification':
+      case "verification":
         emailConfig = config.emails.verification;
         break;
-      case 'admissions':
+      case "admissions":
         emailConfig = config.emails.admissions;
         break;
-      case 'contact':
+      case "contact":
         emailConfig = config.emails.contact;
         break;
       default:
@@ -27,11 +27,11 @@ const sendEmail = async (options) => {
       secure: true,
       auth: {
         user: emailConfig.email,
-        pass: config.smtp.password
+        pass: config.smtp.password,
       },
       tls: {
-        rejectUnauthorized: false
-      }
+        rejectUnauthorized: false,
+      },
     });
 
     const message = {
