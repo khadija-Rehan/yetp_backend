@@ -76,7 +76,7 @@ function getScholarshipSubmissionEmailHtml({
             <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <h4 style="color: #333333; margin-top: 0;">📞 Need Help?</h4>
               <p style="font-size: 14px; color: #555; margin: 0;">
-                If you have any questions about your application, please don't hesitate to contact our support team at <a href="mailto:support@hunarmandpunjab.org.pk" style="color: #007bff;">support@hunarmandpunjab.org.pk</a>
+                If you have any questions about your application, please don't hesitate to contact our support team at <a href="mailto:contact@hunarmandpunjab.com" style="color: #007bff;">contact@hunarmandpunjab.com</a>
               </p>
             </div>
 

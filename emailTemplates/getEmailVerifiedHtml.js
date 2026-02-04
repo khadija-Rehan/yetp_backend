@@ -78,7 +78,7 @@ function getEmailVerifiedHtml({ userName, rollNumber }) {
             </div>
 
             <p style="font-size: 14px; color: #999999;">
-              For any questions or support, please contact our team at <a href="mailto:support@hunarmandpunjab.org.pk" style="color: #007bff;">support@hunarmandpunjab.org.pk</a>
+              For any questions or support, please contact our team at <a href="mailto:contact@hunarmandpunjab.com" style="color: #007bff;">contact@hunarmandpunjab.com</a>
             </p>
 
             <p style="font-size: 16px; color: #555555;">

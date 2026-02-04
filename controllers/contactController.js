@@ -152,7 +152,7 @@ exports.contactUs = async (req, res) => {
             <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <h4 style="color: #856404; margin-top: 0;">📞 Need Immediate Assistance?</h4>
               <p style="font-size: 14px; color: #856404; margin: 0;">
-                For urgent matters, you can also contact us directly at <a href="mailto:support@hunarmandpunjab.org.pk" style="color: #079560;">support@hunarmandpunjab.org.pk</a> or call our helpline.
+                For urgent matters, you can also contact us directly at <a href="mailto:contact@hunarmandpunjab.com" style="color: #079560;">contact@hunarmandpunjab.com</a> or call our helpline.
               </p>
             </div>
 

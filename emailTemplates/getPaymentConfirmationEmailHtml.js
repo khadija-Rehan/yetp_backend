@@ -51,7 +51,7 @@ function getPaymentConfirmationEmailHtml({
             <div style="background-color: #e9f7ef; border: 1px solid #b2f0c0; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <h4 style="color: #155724; margin-top: 0;">📞 Need Help?</h4>
               <p style="font-size: 14px; color: #155724; margin: 0;">
-                If you have any questions about this transaction or need assistance, please contact our support team at <a href="mailto:support@hunarmandpunjab.org.pk" style="color: #079560;">support@hunarmandpunjab.org.pk</a>
+                If you have any questions about this transaction or need assistance, please contact our support team at <a href="mailto:contact@hunarmandpunjab.com" style="color: #079560;">contact@hunarmandpunjab.com</a>
               </p>
             </div>
 
