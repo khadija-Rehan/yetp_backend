@@ -2,6 +2,12 @@ const nodemailer = require("nodemailer");
 const config = require("../config/config");
 
 const sendEmail = async (options) => {
+  // Skip silently if SMTP is not configured
+  if (!config.smtp.host) {
+    console.log("SMTP not configured — skipping email to:", options.email);
+    return { success: false, message: "SMTP not configured" };
+  }
+
   try {
     // Determine which email configuration to use based on email type
     let emailConfig;
