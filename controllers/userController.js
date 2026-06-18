@@ -37,11 +37,12 @@ exports.generateAndSendPDF = async (req, res) => {
     console.log("userCourses", userCourses);
 
     // Generate sequential challan ID first (same logic as generatePDF)
-    const lastChallan = await Challan.findOne({}).sort({ createdAt: -1 }).select("challanId");
+    // Only consider sequential IDs (5-7 digits), ignore old timestamp-based IDs
+    const lastChallan = await Challan.findOne({ challanId: { $regex: /^\d{5,7}$/ } }).sort({ challanId: -1 }).select("challanId");
     let nextChallanNum = 10000;
     if (lastChallan?.challanId) {
       const parsed = parseInt(lastChallan.challanId, 10);
-      if (!isNaN(parsed) && parsed >= 10000) nextChallanNum = parsed + 1;
+      if (!isNaN(parsed) && parsed >= 10000 && parsed < 10000000) nextChallanNum = parsed + 1;
     }
     const reservedChallanId = String(nextChallanNum);
 

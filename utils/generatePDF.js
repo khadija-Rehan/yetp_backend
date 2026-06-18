@@ -23,11 +23,12 @@ const generatePDF = async (userData, amount, userCourses) => {
 
     // Sequential challan IDs starting from 10000
     do {
-      const lastChallan = await Challan.findOne({}).sort({ createdAt: -1 }).select('challanId');
+      // Only consider sequential IDs (5-7 digits), ignore old timestamp-based IDs
+      const lastChallan = await Challan.findOne({ challanId: { $regex: /^\d{5,7}$/ } }).sort({ challanId: -1 }).select('challanId');
       let nextNum = 10000;
       if (lastChallan?.challanId) {
         const parsed = parseInt(lastChallan.challanId, 10);
-        if (!isNaN(parsed) && parsed >= 10000) nextNum = parsed + 1;
+        if (!isNaN(parsed) && parsed >= 10000 && parsed < 10000000) nextNum = parsed + 1;
       }
       challanNumber = String(nextNum);
 
