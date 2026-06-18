@@ -10,13 +10,13 @@ function getEmailVerifiedHtml({ userName, rollNumber }) {
       <table align="center" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
         <tr>
           <td style="text-align: center;">
-            <img src="https://hunarmandpunjab.org.pk/images/email_banner.png" alt="Hunarmand Punjab" style="width: 100%; max-width: 600px;" />
+            <img src="https://yetp.pk/images/email_banner.png" alt="YETP" style="width: 100%; max-width: 600px;" />
           </td>
         </tr>
         <tr>
           <td style="padding: 30px;">
             <h2 style="color: #28a745;">✅ Email Verified Successfully!</h2>
-            <h3 style="color: #333333;">Welcome to Hunarmand Punjab</h3>
+            <h3 style="color: #333333;">Welcome to YETP</h3>
             
             <p style="font-size: 16px; color: #555555;">
               Dear <strong>${userName}</strong>,
@@ -29,7 +29,7 @@ function getEmailVerifiedHtml({ userName, rollNumber }) {
             </div>
             
             <p style="font-size: 16px; color: #555555;">
-              Congratulations! Your email has been successfully verified. Your account is now active and you can access all features of Hunarmand Punjab.
+              Congratulations! Your email has been successfully verified. Your account is now active and you can access all features of YETP.
             </p>
 
             <div style="background-color: #e9f7ef; border: 1px solid #b2f0c0; padding: 15px; border-radius: 8px; margin: 20px 0;">
@@ -61,7 +61,7 @@ function getEmailVerifiedHtml({ userName, rollNumber }) {
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://hunarmandpunjab.org.pk/login" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
+              <a href="https://yetp.pk/login" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
                 Login to Your Account
               </a>
               <br>
@@ -78,12 +78,12 @@ function getEmailVerifiedHtml({ userName, rollNumber }) {
             </div>
 
             <p style="font-size: 14px; color: #999999;">
-              For any questions or support, please contact our team at <a href="mailto:contact@hunarmandpunjab.com" style="color: #007bff;">contact@hunarmandpunjab.com</a>
+              For any questions or support, please contact our team at <a href="mailto:contact@yetp.pk" style="color: #007bff;">contact@yetp.pk</a>
             </p>
 
             <p style="font-size: 16px; color: #555555;">
-              Welcome to the Hunarmand Punjab family!<br />
-              <strong>Team Hunarmand Punjab</strong>
+              Welcome to the YETP family!<br />
+              <strong>Team YETP</strong>
             </p>
           </td>
         </tr>

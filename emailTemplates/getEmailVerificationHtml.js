@@ -10,7 +10,7 @@ function getEmailVerificationHtml({ userName, verifyLink }) {
       <table align="center" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
         <tr>
           <td style="text-align: center;">
-            <img src="https://hunarmandpunjab.org.pk/images/email_banner.png" alt="Hunarmand Punjab" style="width: 100%; max-width: 600px;" />
+            <img src="https://yetp.pk/images/email_banner.png" alt="YETP" style="width: 100%; max-width: 600px;" />
           </td>
         </tr>
         <tr>
@@ -20,7 +20,7 @@ function getEmailVerificationHtml({ userName, verifyLink }) {
               Dear <strong>${userName}</strong>,
             </p>
             <p style="font-size: 16px; color: #555555;">
-              Thank you for registering on <strong>Hunarmand Punjab</strong>. To secure your account and gain full access to our services, please verify your email address.
+              Thank you for registering on <strong>YETP</strong>. To secure your account and gain full access to our services, please verify your email address.
             </p>
             <div style="text-align: center; margin: 30px 0;">
               <a href="${verifyLink}" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block;">
@@ -35,7 +35,7 @@ function getEmailVerificationHtml({ userName, verifyLink }) {
             </p>
             <p style="font-size: 16px; color: #555555;">
               Thank you,<br />
-              <strong>Team Hunarmand Punjab</strong>
+              <strong>Team YETP</strong>
             </p>
           </td>
         </tr>

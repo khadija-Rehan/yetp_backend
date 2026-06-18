@@ -15,20 +15,20 @@ function getTestPassedEmailHtml({
       <table align="center" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
         <tr>
           <td style="text-align: center;">
-            <img src="https://hunarmandpunjab.org.pk/images/email_banner.png" alt="Hunarmand Punjab" style="width: 100%; max-width: 600px;" />
+            <img src="https://yetp.pk/images/email_banner.png" alt="YETP" style="width: 100%; max-width: 600px;" />
           </td>
         </tr>
         <tr>
           <td style="padding: 30px;">
             <h2 style="color: #28a745;">🎉 Congratulations! You Have Passed the Admission Test</h2>
-            <h3 style="color: #333333;">Now You Are Eligible For Hunarmand Punjab Scholarship Card</h3>
+            <h3 style="color: #333333;">Now You Are Eligible For YETP Scholarship Card</h3>
             
             <p style="font-size: 16px; color: #555555;">
               Dear <strong>${userName}</strong>,
             </p>
             
             <p style="font-size: 16px; color: #555555;">
-              We are thrilled to inform you that you have successfully cleared the Hunarmand Punjab Admission Test. Now you are eligible for a Scholarship Card. To confirm your seat & proceed with your enrolled course. All the courses under the Hunarmand scholarship card are 100% free, but the application processing fee is necessary to complete your application. Your processing fee will be reimbursed if you achieve above 85% Marks in the final evaluation test under the policy of Hunarmand Punjab.
+              We are thrilled to inform you that you have successfully cleared the YETP Admission Test. Now you are eligible for a Scholarship Card. To confirm your seat & proceed with your enrolled course. All the courses under the YETP scholarship card are 100% free, but the application processing fee is necessary to complete your application. Your processing fee will be reimbursed if you achieve above 85% Marks in the final evaluation test under the policy of YETP.
             </p>
 
             <div style="background-color: #f8f9fa; padding: 15px 20px; border-radius: 8px; margin: 15px 0;">
@@ -70,7 +70,7 @@ function getTestPassedEmailHtml({
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://hunarmandpunjab.org.pk/apply-scholarshipcard" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
+              <a href="https://yetp.pk/apply-scholarshipcard" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
                 Scholarship Card Application Form
               </a>
             </div>
@@ -95,7 +95,7 @@ function getTestPassedEmailHtml({
 
             <p style="font-size: 16px; color: #555555;">
               You're just one step away from receiving your Scholarship Card!<br />
-              <strong>Team Hunarmand Punjab</strong>
+              <strong>Team YETP</strong>
             </p>
           </td>
         </tr>

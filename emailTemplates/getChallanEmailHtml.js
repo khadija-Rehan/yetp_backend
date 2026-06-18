@@ -10,7 +10,7 @@ function getChallanEmailHtml({ userName, challanNumber, amount, bannerUrl }) {
       <table align="center" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
         <tr>
           <td style="text-align: center;">
-            <img src="https://hunarmandpunjab.org.pk/images/email_banner.png" alt="Hunarmand Punjab" style="width: 100%; max-width: 600px;" />
+            <img src="https://yetp.pk/images/email_banner.png" alt="YETP" style="width: 100%; max-width: 600px;" />
           </td>
         </tr>
         <tr>
@@ -69,11 +69,11 @@ function getChallanEmailHtml({ userName, challanNumber, amount, bannerUrl }) {
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://hunarmandpunjab.org.pk/admission-result" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
+              <a href="https://yetp.pk/admission-result" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
                 View Payment Status
               </a>
               <br>
-              <a href="https://hunarmandpunjab.org.pk/contact-us" style="background-color: #007bff; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
+              <a href="https://yetp.pk/contact-us" style="background-color: #007bff; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
                 Contact Support
               </a>
             </div>
@@ -81,7 +81,7 @@ function getChallanEmailHtml({ userName, challanNumber, amount, bannerUrl }) {
             <div style="background-color: #e9f7ef; border: 1px solid #b2f0c0; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <h4 style="color: #155724; margin-top: 0;">📞 Need Help?</h4>
               <p style="font-size: 14px; color: #155724; margin: 0;">
-                If you have any questions about the payment process or need assistance, please contact our support team at <a href="mailto:contact@hunarmandpunjab.com" style="color: #079560;">contact@hunarmandpunjab.com</a>
+                If you have any questions about the payment process or need assistance, please contact our support team at <a href="mailto:contact@yetp.pk" style="color: #079560;">contact@yetp.pk</a>
               </p>
             </div>
 
@@ -90,8 +90,8 @@ function getChallanEmailHtml({ userName, challanNumber, amount, bannerUrl }) {
             </p>
 
             <p style="font-size: 16px; color: #555555;">
-              Thank you for choosing Hunarmand Punjab!<br />
-              <strong>Team Hunarmand Punjab</strong>
+              Thank you for choosing YETP!<br />
+              <strong>Team YETP</strong>
             </p>
           </td>
         </tr>

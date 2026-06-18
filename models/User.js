@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema(
     secondRollNumber: {
       type: String,
       unique: true,
+      sparse: true,
       required: false,
     },
     email: {
@@ -120,44 +121,35 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Generate unique roll number
-userSchema.statics.generateRollNumber = async function (
-  isSecondEnroll = false
-) {
-  const year = new Date().getFullYear();
+// Generate unique roll number — sequential from 10001 (like challan IDs)
+userSchema.statics.generateRollNumber = async function (isSecondEnroll = false) {
   let attempts = 0;
-  const maxAttempts = 50;
-
-  // Regex for existing roll numbers in this year
-  const yearRegex = new RegExp(`^HM(-B2)?-${year}-\\d{3}-\\d{3}`);
-
-  // Count how many roll numbers exist this year
-  const count = await this.countDocuments({
-    rollNumber: { $regex: yearRegex },
-  });
+  const maxAttempts = 20;
 
   while (attempts < maxAttempts) {
-    const sequential = String(count + attempts + 1).padStart(3, "0");
-    const randomNum = Math.floor(Math.random() * 900) + 100; // 100-999
+    // Find last user sorted by creation time
+    const lastUser = await this.findOne({}).sort({ createdAt: -1 }).select("rollNumber");
+    let nextNum = 10001;
 
-    // Insert B2 immediately after HM if second enrollment
-    let rollNumber = "HM";
-    if (isSecondEnroll) rollNumber += "-B2";
-
-    rollNumber += `-${year}-${sequential}-${randomNum}`;
-
-    // Ensure uniqueness
-    const existingUser = await this.findOne({ rollNumber });
-    if (!existingUser) {
-      return rollNumber;
+    if (lastUser?.rollNumber) {
+      const match = lastUser.rollNumber.match(/(\d+)$/);
+      if (match) {
+        const parsed = parseInt(match[1], 10);
+        if (!isNaN(parsed) && parsed >= 10001) nextNum = parsed + 1;
+      }
     }
+
+    let rollNumber = "YETP";
+    if (isSecondEnroll) rollNumber += "-B2";
+    rollNumber += `-${nextNum}`;
+
+    const existing = await this.findOne({ rollNumber });
+    if (!existing) return rollNumber;
 
     attempts++;
   }
 
-  throw new Error(
-    "Could not generate a unique roll number after multiple attempts. Please try again."
-  );
+  throw new Error("Could not generate a unique roll number. Please try again.");
 };
 
 // Hash the password before saving

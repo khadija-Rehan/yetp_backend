@@ -1,6 +1,11 @@
 require('dotenv').config();
+const dns = require('dns');
 const express = require('express');
 const mongoose = require('mongoose');
+
+// The system/ISP DNS resolver on this machine refuses Node's SRV queries
+// (needed for mongodb+srv:// URIs) — public resolvers handle it fine.
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 const path = require('path');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
@@ -44,8 +49,17 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // MongoDB connection
 mongoose.connect(config.mongodbUri)
-  .then(() => {
+  .then(async () => {
     console.log('MongoDB connected successfully');
+
+    // Drop old non-sparse unique index on secondRollNumber so null values don't conflict
+    try {
+      await mongoose.connection.collection('users').dropIndex('secondRollNumber_1');
+      console.log('Dropped old secondRollNumber index — will be recreated as sparse');
+    } catch (_) {
+      // Index may not exist or already dropped — safe to ignore
+    }
+
     // Start the server after successful MongoDB connection
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);

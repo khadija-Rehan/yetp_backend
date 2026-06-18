@@ -9,6 +9,7 @@ const getUserLoginEmailHtml = require("../emailTemplates/getUserLoginEmailHtml")
 const getEmailVerifiedHtml = require("../emailTemplates/getEmailVerifiedHtml");
 const getForgotPasswordEmailHtml = require("../emailTemplates/getForgotPasswordEmailHtml");
 const getPasswordChangedEmailHtml = require("../emailTemplates/getPasswordChangedEmailHtml");
+const config = require("../config/config");
 
 // Signup function
 exports.signup = async (req, res) => {
@@ -84,12 +85,12 @@ exports.signup = async (req, res) => {
       // Update courses based on form type and existing admission types
       if (form === "signup" && admissionType === "online") {
         // User is adding online courses
-        existingUser.courses = [firstCourse, secondCourse];
+        existingUser.courses = [firstCourse, secondCourse].filter(Boolean);
         existingUser.cnicBack = cnicBack || null;
         existingUser.cnicFront = cnicFront || null;
       } else if (form === "admission" && admissionType === "physical") {
         // User is adding physical courses
-        existingUser.physicalCourses = [firstCourse, secondCourse];
+        existingUser.physicalCourses = [firstCourse, secondCourse].filter(Boolean);
         existingUser.photo = photo || null;
       }
 
@@ -136,9 +137,9 @@ exports.signup = async (req, res) => {
 
     // Make courses arrays based on form type
     const courses =
-      form === "admission" ? undefined : [firstCourse, secondCourse];
+      form === "admission" ? undefined : [firstCourse, secondCourse].filter(Boolean);
     const physicalCourses =
-      form === "admission" ? [firstCourse, secondCourse] : undefined;
+      form === "admission" ? [firstCourse, secondCourse].filter(Boolean) : undefined;
 
     // Create new user with all fields
     const user = new User({
@@ -299,7 +300,7 @@ exports.login = async (req, res) => {
     const html = getUserLoginEmailHtml({
       userName: user.fullName,
       loginTime: new Date().toLocaleString(),
-      dashboardUrl: "https://hunarmandpunjab.org.pk/login",
+      dashboardUrl: "https://yetp.pk/candidate-login",
     });
 
     // Remove login email - as per requirements, don't send email on login
@@ -364,8 +365,16 @@ exports.forgotPassword = async (req, res) => {
     await user.save({ validateBeforeSave: false });
 
     // Create reset url
-    // const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
-    const resetUrl = `https://hunarmandpunjab.org.pk/reset-password/${resetToken}`;
+    const resetUrl = `https://yetp.pk/reset-password/${resetToken}`;
+
+    // No SMTP configured yet (dev mode) — skip sending and return the link
+    // directly so the reset flow is still testable end-to-end.
+    if (!config.smtp.host) {
+      return res.status(200).json({
+        message: "Email not sent (dev mode — SMTP not configured). Use this link:",
+        resetUrl,
+      });
+    }
 
     const html = getForgotPasswordEmailHtml({
       userName: user.fullName,
@@ -374,7 +383,7 @@ exports.forgotPassword = async (req, res) => {
 
     const emailResult = await sendEmail({
       email: user.email,
-      subject: "Password Reset Request - Hunarmand Punjab",
+      subject: "Password Reset Request - YETP",
       html: html,
       emailType: "contact",
     });
@@ -385,9 +394,9 @@ exports.forgotPassword = async (req, res) => {
       user.resetPasswordExpire = undefined;
       await user.save({ validateBeforeSave: false });
 
-      return res.status(500).json({
-        message:
-          "Password reset email could not be sent. Please try again later.",
+      return res.status(200).json({
+        message: "Password reset email could not be sent. Use this link:",
+        resetUrl,
         emailError: emailResult.error,
       });
     }
@@ -421,7 +430,14 @@ exports.resetPassword = async (req, res) => {
     user.resetPasswordExpire = undefined;
     await user.save();
 
-    // Send password change confirmation email
+    // Send password change confirmation email (skip if SMTP isn't configured)
+    if (!config.smtp.host) {
+      return res.status(200).json({
+        message: "Password reset successful",
+        emailSent: false,
+      });
+    }
+
     const html = getPasswordChangedEmailHtml({
       userName: user.fullName,
       changeTime: new Date().toLocaleString(),
@@ -429,7 +445,7 @@ exports.resetPassword = async (req, res) => {
 
     const emailResult = await sendEmail({
       email: user.email,
-      subject: "Password Changed Successfully - Hunarmand Punjab",
+      subject: "Password Changed Successfully - YETP",
       html: html,
       emailType: "contact",
     });
@@ -462,27 +478,11 @@ exports.verifyEmail = async (req, res) => {
     user.isVerified = true;
     user.verifyToken = "";
     await user.save();
-    const verificationHtml = getEmailVerifiedHtml({
-      userName: user.fullName,
-      rollNumber: user.rollNumber,
-    });
-    // const emailResult = await sendEmail({
-    //   email: user.email,
-    //   subject: "Email Verified Successfully!",
-    //   html: verificationHtml,
-    //   emailType: 'verification',
-    // });
 
-    // Even if email fails, the verification is successful, so redirect
-    // but we could log the email failure for monitoring
-    if (!emailResult.success) {
-      console.error(
-        "Email verification confirmation failed:",
-        emailResult.error
-      );
-    }
+    // Confirmation email is intentionally not sent (SMTP not configured yet).
+    // Verification itself still succeeds below regardless of email status.
 
-    return res.redirect("https://hunarmandpunjab.org.pk/login");
+    return res.redirect("https://yetp.pk/candidate-login");
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

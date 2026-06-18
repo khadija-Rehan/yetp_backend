@@ -18,20 +18,20 @@ module.exports = {
   emails: {
     // Email Verification & Email Verification Successfully
     verification: {
-      email: process.env.VERIFICATION_EMAIL || 'noreply@hunarmandpunjab.com',
-      name: 'Hunarmand Punjab - No Reply'
+      email: process.env.VERIFICATION_EMAIL || 'noreply@yetp.pk',
+      name: 'YETP - No Reply'
     },
-    
+
     // Admission Test Email Notification & Challan Email Notification & Certificate Notification
     admissions: {
-      email: process.env.ADMISSIONS_EMAIL || 'admissions@hunarmandpunjab.com',
-      name: 'Hunarmand Punjab - Admissions'
+      email: process.env.ADMISSIONS_EMAIL || 'admissions@yetp.pk',
+      name: 'YETP - Admissions'
     },
-    
+
     // Password Reset & Scholarship Card & Contact
     contact: {
-      email: process.env.CONTACT_EMAIL || 'contact@hunarmandpunjab.com',
-      name: 'Hunarmand Punjab - Contact'
+      email: process.env.CONTACT_EMAIL || 'contact@yetp.pk',
+      name: 'YETP - Contact'
     }
   }
 }; 

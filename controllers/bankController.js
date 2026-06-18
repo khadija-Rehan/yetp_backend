@@ -145,8 +145,8 @@ exports.postPay = async (req, res) => {
       if (user && user.email) {
         await sendEmail({
           email: user.email,
-          subject: "Payment Confirmation - Hunarmand",
-          message: `Dear ${user.fullName},\n\nYour challan payment of PKR ${amount} has been successfully received.\n\nChallan ID: ${challanId}\nTransaction ID: ${txnId}\nDate: ${txnDate}\n\nThank you,\nHunarmand Team`,
+          subject: "Payment Confirmation - YETP",
+          message: `Dear ${user.fullName},\n\nYour challan payment of PKR ${amount} has been successfully received.\n\nChallan ID: ${challanId}\nTransaction ID: ${txnId}\nDate: ${txnDate}\n\nThank you,\nYETP Team`,
           html: getPaymentConfirmationEmailHtml({
             fullName: user.fullName,
             challanId,

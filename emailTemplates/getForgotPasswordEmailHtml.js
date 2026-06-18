@@ -10,7 +10,7 @@ function getForgotPasswordEmailHtml({ userName, resetUrl }) {
       <table align="center" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
         <tr>
           <td style="text-align: center;">
-            <img src="https://hunarmandpunjab.org.pk/images/email_banner.png" alt="Hunarmand Punjab" style="width: 100%; max-width: 600px;" />
+            <img src="https://yetp.pk/images/email_banner.png" alt="YETP" style="width: 100%; max-width: 600px;" />
           </td>
         </tr>
         <tr>
@@ -22,7 +22,7 @@ function getForgotPasswordEmailHtml({ userName, resetUrl }) {
             </p>
             
             <p style="font-size: 16px; color: #555555;">
-              We received a request to reset your password for your Hunarmand Punjab account. If you made this request, please click the button below to reset your password.
+              We received a request to reset your password for your YETP account. If you made this request, please click the button below to reset your password.
             </p>
 
             <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">
@@ -53,7 +53,7 @@ function getForgotPasswordEmailHtml({ userName, resetUrl }) {
             <div style="background-color: #e9f7ef; border: 1px solid #b2f0c0; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <h4 style="color: #155724; margin-top: 0;">📞 Need Help?</h4>
               <p style="font-size: 14px; color: #155724; margin: 0;">
-                If you're having trouble resetting your password or didn't request this reset, please contact our support team at <a href="mailto:contact@hunarmandpunjab.com" style="color: #079560;">contact@hunarmandpunjab.com</a>
+                If you're having trouble resetting your password or didn't request this reset, please contact our support team at <a href="mailto:contact@yetp.pk" style="color: #079560;">contact@yetp.pk</a>
               </p>
             </div>
 
@@ -63,7 +63,7 @@ function getForgotPasswordEmailHtml({ userName, resetUrl }) {
 
             <p style="font-size: 16px; color: #555555;">
               Best regards,<br />
-              <strong>Team Hunarmand Punjab</strong>
+              <strong>Team YETP</strong>
             </p>
           </td>
         </tr>

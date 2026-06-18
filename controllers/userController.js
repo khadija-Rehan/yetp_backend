@@ -36,25 +36,43 @@ exports.generateAndSendPDF = async (req, res) => {
 
     console.log("userCourses", userCourses);
 
-    const { filePath, fileName, challanNumber } = await generatePDF(
-      user,
-      amount,
-      userCourses
-    );
+    // Generate sequential challan ID first (same logic as generatePDF)
+    const lastChallan = await Challan.findOne({}).sort({ createdAt: -1 }).select("challanId");
+    let nextChallanNum = 10000;
+    if (lastChallan?.challanId) {
+      const parsed = parseInt(lastChallan.challanId, 10);
+      if (!isNaN(parsed) && parsed >= 10000) nextChallanNum = parsed + 1;
+    }
+    const reservedChallanId = String(nextChallanNum);
 
-    // const secondEnrollChallan = isSecondEnroll ? false : true;
+    // PSID = "1000000" (7-digit prefix) + challanId padded to 8 digits = 15 digits (same as Digikhyber)
+    const challanId8 = String(reservedChallanId).padStart(8, "0");
+    const psid = "1000000" + challanId8;
 
-    // console.log("secondEnrollChallan", secondEnrollChallan);
-
-    // Save challan details to database
+    // Save challan to DB immediately so PSID is always available
     const challan = new Challan({
       userId: user._id,
-      challanId: challanNumber,
+      challanId: reservedChallanId,
+      psid: psid,
       amount: amount,
-      path: filePath,
+      path: null,
       secondEnrollChallan: isSecondEnroll === "true" ? true : false,
     });
     await challan.save();
+
+    // Now generate PDF (best-effort — PSID already saved above)
+    let filePath = null, fileName = null, challanNumber = reservedChallanId;
+    try {
+      const pdfResult = await generatePDF(user, amount, userCourses);
+      filePath = pdfResult.filePath;
+      fileName = pdfResult.fileName;
+      challanNumber = pdfResult.challanNumber;
+      // Update path in DB
+      challan.path = filePath;
+      await challan.save();
+    } catch (pdfErr) {
+      console.error("PDF generation failed (challan ID already saved):", pdfErr.message);
+    }
 
     // Send email with PDF attachment
     const html = getChallanEmailHtml({
@@ -272,6 +290,7 @@ exports.getUserData = async (req, res) => {
         unpaidAmount: totalUnpaidAmount,
         challans: challans.map((challan) => ({
           challanId: challan.challanId,
+          psid: challan.psid || null,
           amount: challan.amount,
           paid: challan.paid,
           branchCode: challan.branchCode,

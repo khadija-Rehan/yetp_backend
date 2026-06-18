@@ -10,7 +10,7 @@ function getUserLoginEmailHtml({ userName, loginTime, dashboardUrl }) {
       <table align="center" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
         <tr>
           <td style="text-align: center;">
-            <img src="https://hunarmandpunjab.org.pk/images/email_banner.png" alt="Hunarmand Punjab" style="width: 100%; max-width: 600px;" />
+            <img src="https://yetp.pk/images/email_banner.png" alt="YETP" style="width: 100%; max-width: 600px;" />
           </td>
         </tr>
         <tr>
@@ -18,7 +18,7 @@ function getUserLoginEmailHtml({ userName, loginTime, dashboardUrl }) {
             <h2 style="color: #333333;">🔒 Login Alert</h2>
             <p style="font-size: 16px; color: #555555;">Hi <strong>${userName}</strong>,</p>
             <p style="font-size: 16px; color: #555555;">
-              We noticed a login to your <strong>Hunarmand Punjab</strong> account on:
+              We noticed a login to your <strong>YETP</strong> account on:
             </p>
   
             <p style="font-size: 15px; color: #333;"><strong>${loginTime}</strong></p>
@@ -28,14 +28,14 @@ function getUserLoginEmailHtml({ userName, loginTime, dashboardUrl }) {
             </p>
   
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://hunarmandpunjab.org.pk" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+              <a href="https://yetp.pk" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
                 Go to Dashboard
               </a>
             </div>
   
             <p style="font-size: 16px; color: #555;">
               Thanks,<br />
-              <strong>Team Hunarmand Punjab</strong>
+              <strong>Team YETP</strong>
             </p>
           </td>
         </tr>

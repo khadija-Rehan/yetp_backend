@@ -22,8 +22,8 @@ const signupValidation = [
     .normalizeEmail(),
 
   body("password")
-    .isLength({ min: 6 })
-    .withMessage("Password must be at least 6 characters long"),
+    .isLength({ min: 8 })
+    .withMessage("Password must be at least 8 characters long"),
 
   body("fullName")
     .notEmpty()
@@ -119,32 +119,13 @@ const signupValidation = [
   //   return true;
   // }),
 
-  // Validate courses based on form type
-  body("form").custom((value, { req }) => {
-    const form = value || req.body.form || "signup"; // Default to signup
-    
-    if (form === "admission") {
-      // For physical admission, check for firstCourse and secondCourse (will be stored as physicalCourses)
-      if (!req.body.firstCourse || !req.body.secondCourse) {
-        throw new Error("Both firstCourse and secondCourse are required for physical admission");
-      }
-    } else if (form === "signup") {
-      // For online signup, check for firstCourse and secondCourse (will be stored as courses)
-      if (!req.body.firstCourse || !req.body.secondCourse) {
-        throw new Error("Both firstCourse and secondCourse are required for online signup");
-      }
-    }
-    
-    return true;
-  }),
-
   body("firstCourse")
     .notEmpty()
     .withMessage("First course is required"),
 
-  body("secondCourse")
-    .notEmpty()
-    .withMessage("Second course is required"),
+  // Second course is optional — Hunarmand's original form requires both,
+  // but YETP's admission form only requires the first course.
+  body("secondCourse").optional(),
 
   validate,
 ];

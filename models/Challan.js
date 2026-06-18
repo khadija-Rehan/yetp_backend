@@ -27,6 +27,10 @@ const challanSchema = new mongoose.Schema(
     txnDate: {
       type: Date,
     },
+    psid: {
+      type: String,
+      default: null,
+    },
     path: {
       type: String,
     },

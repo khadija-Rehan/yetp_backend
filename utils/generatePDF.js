@@ -21,14 +21,16 @@ const generatePDF = async (userData, amount, userCourses) => {
     let attempts = 0;
     const maxAttempts = 10;
 
-    // Try to generate a unique challan number (not in DB)
+    // Sequential challan IDs starting from 10000
     do {
-      const now = Date.now().toString(); // e.g., "1722267402733"
-      const shortTime = now.slice(-5);   // last 5 digits of timestamp
-      const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0'); // 000–999
-      challanNumber = shortTime + random; // 5 timestamp digits + 3 random = 8 digits
+      const lastChallan = await Challan.findOne({}).sort({ createdAt: -1 }).select('challanId');
+      let nextNum = 10000;
+      if (lastChallan?.challanId) {
+        const parsed = parseInt(lastChallan.challanId, 10);
+        if (!isNaN(parsed) && parsed >= 10000) nextNum = parsed + 1;
+      }
+      challanNumber = String(nextNum);
 
-      // Check if challan with this number exists in DB
       existingChallan = await Challan.findOne({ challanId: challanNumber });
       attempts++;
     } while (existingChallan && attempts < maxAttempts);

@@ -16,13 +16,13 @@ function getScholarshipSubmissionEmailHtml({
       <table align="center" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
         <tr>
           <td style="text-align: center;">
-            <img src="https://hunarmandpunjab.org.pk/images/email_banner.png" alt="Hunarmand Punjab" style="width: 100%; max-width: 600px;" />
+            <img src="https://yetp.pk/images/email_banner.png" alt="YETP" style="width: 100%; max-width: 600px;" />
           </td>
         </tr>
         <tr>
           <td style="padding: 30px;">
             <h2 style="color: #28a745;">🎉 Scholarship Application Submitted Successfully!</h2>
-            <h3 style="color: #333333;">Thank you for applying to Hunarmand Punjab</h3>
+            <h3 style="color: #333333;">Thank you for applying to YETP</h3>
             
             <p style="font-size: 16px; color: #555555;">
               Dear <strong>${userName}</strong>,
@@ -64,11 +64,11 @@ function getScholarshipSubmissionEmailHtml({
             </div>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="https://hunarmandpunjab.org.pk/login" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
+              <a href="https://yetp.pk/login" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
                 View Application Status
               </a>
               <br>
-              <a href="https://hunarmandpunjab.org.pk/contact-us" style="background-color: #007bff; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
+              <a href="https://yetp.pk/contact-us" style="background-color: #007bff; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
                 Contact Support
               </a>
             </div>
@@ -76,13 +76,13 @@ function getScholarshipSubmissionEmailHtml({
             <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <h4 style="color: #333333; margin-top: 0;">📞 Need Help?</h4>
               <p style="font-size: 14px; color: #555; margin: 0;">
-                If you have any questions about your application, please don't hesitate to contact our support team at <a href="mailto:contact@hunarmandpunjab.com" style="color: #007bff;">contact@hunarmandpunjab.com</a>
+                If you have any questions about your application, please don't hesitate to contact our support team at <a href="mailto:contact@yetp.pk" style="color: #007bff;">contact@yetp.pk</a>
               </p>
             </div>
 
             <p style="font-size: 16px; color: #555555;">
-              Thank you for choosing Hunarmand Punjab!<br />
-              <strong>Team Hunarmand Punjab</strong>
+              Thank you for choosing YETP!<br />
+              <strong>Team YETP</strong>
             </p>
           </td>
         </tr>
