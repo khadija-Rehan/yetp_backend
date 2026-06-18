@@ -17,6 +17,9 @@ const fileFilter = (req, file, cb) => {
   const allowedTypes = [
     'image/png',
     'image/jpeg',
+    'image/jpg',
+    'image/jfif',
+    'image/pjpeg',
     'application/pdf',
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',

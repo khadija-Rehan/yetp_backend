@@ -2,6 +2,11 @@ require('dotenv').config();
 const dns = require('dns');
 const express = require('express');
 const mongoose = require('mongoose');
+const fs = require('fs');
+
+// Ensure uploads directory exists (Render ephemeral filesystem)
+if (!fs.existsSync('uploads')) fs.mkdirSync('uploads', { recursive: true });
+if (!fs.existsSync('images')) fs.mkdirSync('images', { recursive: true });
 
 // The system/ISP DNS resolver on this machine refuses Node's SRV queries
 // (needed for mongodb+srv:// URIs) — public resolvers handle it fine.
