@@ -23,18 +23,27 @@ exports.generateAndSendPDF = async (req, res) => {
     }
 
     const amount = 3250;
+    const isSecondEnrollBool = isSecondEnroll === "true";
 
-    console.log(
-      "user courses",
-      user.courses,
-      "second enrolled courses",
-      user.secondEnrolledCourses
-    );
+    // ── IDEMPOTENCY: return existing challan if already generated ──────────
+    const existingChallan = await Challan.findOne({
+      userId: user._id,
+      secondEnrollChallan: isSecondEnrollBool,
+    });
+    if (existingChallan) {
+      return res.status(200).json({
+        status: "success",
+        message: "Challan already exists",
+        data: {
+          challanNumber: existingChallan.challanId,
+          fileName: existingChallan.path ? existingChallan.path.split("/").pop() : null,
+          psid: existingChallan.psid,
+        },
+      });
+    }
+    // ──────────────────────────────────────────────────────────────────────
 
-    const userCourses =
-      isSecondEnroll === "true" ? user.secondEnrolledCourses : user.courses;
-
-    console.log("userCourses", userCourses);
+    const userCourses = isSecondEnrollBool ? user.secondEnrolledCourses : user.courses;
 
     // Generate sequential challan ID first (same logic as generatePDF)
     // Only consider sequential IDs (5-7 digits), ignore old timestamp-based IDs
@@ -57,7 +66,7 @@ exports.generateAndSendPDF = async (req, res) => {
       psid: psid,
       amount: amount,
       path: null,
-      secondEnrollChallan: isSecondEnroll === "true" ? true : false,
+      secondEnrollChallan: isSecondEnrollBool,
     });
     await challan.save();
 
@@ -82,38 +91,21 @@ exports.generateAndSendPDF = async (req, res) => {
       amount: amount,
     });
 
-    const emailSubject =
-      isSecondEnroll === "true"
-        ? "Your Second Enrollment Challan is Ready - Hunarmand Punjab"
-        : "Your Challan is Ready - Hunarmand Punjab";
+    const emailSubject = isSecondEnrollBool
+      ? "Your Second Enrollment Challan is Ready - YETP"
+      : "Your Challan is Ready - YETP";
 
-    const emailResult = await sendEmail({
+    sendEmail({
       email: user.email,
       subject: emailSubject,
       html: html,
       emailType: "contact",
-      attachments: [
-        {
-          filename: fileName,
-          path: filePath,
-        },
-      ],
-    });
-
-    // Read the PDF file
-    const pdfBuffer = fs.readFileSync(filePath);
-
-    // Set response headers
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `attachment; filename=${fileName}`);
-
-    console.log("pdfBuffer", pdfBuffer);
+      attachments: fileName && filePath ? [{ filename: fileName, path: filePath }] : [],
+    }).catch(() => {});
 
     return res.status(200).json({
       status: "success",
-      message: "PDF generated successfully",
-      emailSent: emailResult.success,
-      emailError: emailResult.success ? null : emailResult.error,
+      message: "Challan generated successfully",
       data: { fileName, challanNumber },
     });
 
@@ -174,32 +166,19 @@ exports.updateTestScore = async (req, res) => {
       });
     }
 
-    // If user passed the test, send an email
+    // Fire email in background — do not await (avoids blocking response)
     if (updatedUser.testPassed === true) {
       const testPassedHtml = getTestPassedEmailHtml({
         userName: updatedUser.fullName,
         testScore: updatedUser.testScore,
         rollNumber: updatedUser.rollNumber,
       });
-
-      const emailResult = await sendEmail({
+      sendEmail({
         email: updatedUser.email,
-        subject:
-          "Congratulations! You Have Passed the Admission Test – Now You Are Eligible For Hunarmand Punjab Scholarship Card",
+        subject: "Congratulations! You Have Passed the Admission Test – YETP",
         html: testPassedHtml,
         emailType: "admissions",
-      });
-
-      return res.status(200).json({
-        status: "success",
-        message: "Test score updated successfully",
-        emailSent: emailResult.success,
-        emailError: emailResult.success ? null : emailResult.error,
-        data: {
-          testScore: updatedUser.testScore,
-          testPassed: updatedUser.testPassed,
-        },
-      });
+      }).catch(() => {});
     }
 
     return res.status(200).json({
@@ -283,6 +262,7 @@ exports.getUserData = async (req, res) => {
         updatedAt: userData.updatedAt,
         admissionType: userData.admissionType,
         physicalCourses: userData.physicalCourses,
+        photo: userData.photo || null,
       },
       challans: {
         total: challans.length,

@@ -27,10 +27,11 @@ const sendEmail = async (options) => {
         emailConfig = config.emails.admissions;
     }
 
+    const smtpPort = Number(config.smtp.port) || 587;
     const transporter = nodemailer.createTransport({
       host: config.smtp.host,
-      port: config.smtp.port || 587,
-      secure: true,
+      port: smtpPort,
+      secure: smtpPort === 465,
       auth: {
         user: emailConfig.email,
         pass: config.smtp.password,
