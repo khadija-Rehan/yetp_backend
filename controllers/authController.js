@@ -88,6 +88,7 @@ exports.signup = async (req, res) => {
         existingUser.courses = [firstCourse, secondCourse].filter(Boolean);
         existingUser.cnicBack = cnicBack || null;
         existingUser.cnicFront = cnicFront || null;
+        if (photo) existingUser.photo = photo;
       } else if (form === "admission" && admissionType === "physical") {
         // User is adding physical courses
         existingUser.physicalCourses = [firstCourse, secondCourse].filter(Boolean);
