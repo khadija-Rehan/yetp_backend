@@ -69,7 +69,7 @@ function getChallanEmailHtml({ userName, challanNumber, amount, psid }) {
               <ul style="font-size: 14px; color: #856404; padding-left: 20px;">
                 <li>Pay the exact amount mentioned — no additional charges</li>
                 <li>Processing fee is non-refundable once paid</li>
-                <li>After successful payment your Scholarship Card will be issued automatically</li>
+                <li>After successful payment your enrollment will be confirmed automatically</li>
                 <li>Check payment status on your dashboard</li>
               </ul>
             </div>

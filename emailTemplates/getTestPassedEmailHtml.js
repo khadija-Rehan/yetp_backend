@@ -23,14 +23,14 @@ function getTestPassedEmailHtml({ userName, testScore, rollNumber }) {
         <tr>
           <td style="padding: 30px;">
             <h2 style="color: #333333;">🎉 Congratulations! You Have Passed the Admission Test</h2>
-            <h3 style="color: #333333;">Now You Are Eligible For YETP Scholarship Card</h3>
+            <h3 style="color: #333333;">Your Seat at YETP is Confirmed — Pay Processing Fee to Enroll</h3>
 
             <p style="font-size: 16px; color: #555555;">
               Dear <strong>${userName}</strong>,
             </p>
 
             <p style="font-size: 16px; color: #555555;">
-              You have successfully cleared the YETP Admission Test with a score of <strong>${testScore}%</strong>. You are now eligible for the YETP Scholarship Card. Please login to your dashboard and generate your PSID to pay the processing fee.
+              You have successfully cleared the YETP Admission Test with a score of <strong>${testScore}%</strong>. You are now eligible to enroll. Please login to your dashboard and generate your PSID to pay the processing fee and confirm your seat.
             </p>
 
             <div style="background-color: #f8f9fa; padding: 15px 20px; border-radius: 8px; margin: 15px 0;">
@@ -46,7 +46,7 @@ function getTestPassedEmailHtml({ userName, testScore, rollNumber }) {
             </div>
 
             <div style="background-color: #e9f7ef; border: 1px solid #b2f0c0; padding: 15px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #155724; margin-top: 0;">✅ Benefits of the Scholarship Card:</h3>
+              <h3 style="color: #155724; margin-top: 0;">✅ YETP Program Benefits:</h3>
               <ul style="font-size: 14px; color: #155724; padding-left: 20px;">
                 <li>Access to Advanced IT Courses (100% Free)</li>
                 <li>Laptop Scheme Eligibility</li>
@@ -62,16 +62,16 @@ function getTestPassedEmailHtml({ userName, testScore, rollNumber }) {
                 <li>Login to your dashboard at <strong>empower-path-eight.vercel.app</strong></li>
                 <li>Click <strong>"Generate PSID"</strong> to get your Consumer Number</li>
                 <li>Pay PKR 3,250 via Banking App, JazzCash, EasyPaisa or Bank Branch</li>
-                <li>Your Scholarship Card will be issued after payment confirmation</li>
+                <li>Your enrollment will be confirmed after payment</li>
               </ol>
             </div>
 
             <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">
               <h4 style="color: #856404; margin-top: 0;">⚠️ Important Notes:</h4>
               <ul style="font-size: 14px; color: #856404; padding-left: 20px;">
-                <li>All selected courses are 100% free — this fee is for card processing only</li>
+                <li>All selected courses are 100% free — this fee is for enrollment processing only</li>
                 <li>Processing fee is non-refundable once paid</li>
-                <li>After successful payment your Scholarship Card will be issued automatically</li>
+                <li>After successful payment your enrollment will be confirmed automatically</li>
               </ul>
             </div>
 
