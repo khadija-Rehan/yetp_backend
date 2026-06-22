@@ -83,7 +83,7 @@ exports.contactUs = async (req, res) => {
             </div>
 
             <p style="font-size: 14px; color: #999999;">
-              This is an automated notification from the Hunarmand Punjab contact form.
+              This is an automated notification from the YETP contact form.
             </p>
           </td>
         </tr>
@@ -94,7 +94,7 @@ exports.contactUs = async (req, res) => {
 
     // Send email to admin
     const adminEmailResult = await sendEmail({
-      email: process.env.ADMIN_EMAIL || "contact@hunarmandpunjab.org.pk",
+      email: process.env.ADMIN_EMAIL || "contact@yetp.pk",
       subject: `New Contact Form Submission: ${subject}`,
       html: adminEmailHtml,
       emailType: "contact",
@@ -104,78 +104,40 @@ exports.contactUs = async (req, res) => {
     const userEmailHtml = `
     <!DOCTYPE html>
     <html>
-    <head>
-      <meta charset="UTF-8" />
-      <title>Thank You for Contacting Us</title>
-    </head>
-    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9;">
-      <table align="center" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
-        <tr>
-          <td style="text-align: center;">
-            <img src="https://hunarmandpunjab.org.pk/images/email_banner.png" alt="Hunarmand Punjab" style="width: 100%; max-width: 600px;" />
-          </td>
-        </tr>
-        <tr>
-          <td style="padding: 30px;">
-            <h2 style="color: #28a745;">✅ Thank You for Contacting Us!</h2>
-            <h3 style="color: #333333;">We've Received Your Message</h3>
-            
-            <p style="font-size: 16px; color: #555555;">
-              Dear <strong>${name}</strong>,
-            </p>
-            
-            <p style="font-size: 16px; color: #555555;">
-              Thank you for reaching out to Hunarmand Punjab. We have successfully received your message and our team will get back to you as soon as possible.
-            </p>
-
-            <div style="background-color: #f8f9fa; padding: 15px 20px; border-radius: 8px; margin: 15px 0;">
-              <p style="font-size: 15px; color: #555; margin: 0;">
-                <strong>Your Message Details:</strong>
-              </p>
-              <ul style="font-size: 14px; color: #555; margin: 10px 0; padding-left: 20px;">
-                <li><strong>Subject:</strong> ${subject}</li>
-                <li><strong>Message:</strong> ${message}</li>
-                <li><strong>Submitted:</strong> ${new Date().toLocaleString()}</li>
-              </ul>
-            </div>
-
-            <div style="background-color: #e9f7ef; border: 1px solid #b2f0c0; padding: 15px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #155724; margin-top: 0;">📋 What Happens Next:</h3>
-              <ol style="font-size: 14px; color: #155724; padding-left: 20px;">
-                <li>Our team will review your message within 24 hours</li>
-                <li>You will receive a detailed response via email</li>
-                <li>If needed, we may contact you via phone</li>
-                <li>We aim to resolve all inquiries within 48 hours</li>
-              </ol>
-            </div>
-
-            <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">
-              <h4 style="color: #856404; margin-top: 0;">📞 Need Immediate Assistance?</h4>
-              <p style="font-size: 14px; color: #856404; margin: 0;">
-                For urgent matters, you can also contact us directly at <a href="mailto:contact@hunarmandpunjab.com" style="color: #079560;">contact@hunarmandpunjab.com</a> or call our helpline.
-              </p>
-            </div>
-
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="https://hunarmandpunjab.org.pk" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
-                Visit Our Website
-              </a>
-            </div>
-
-            <p style="font-size: 16px; color: #555555;">
-              Thank you for choosing Hunarmand Punjab!<br />
-              <strong>Team Hunarmand Punjab</strong>
-            </p>
-          </td>
-        </tr>
+    <head><meta charset="UTF-8" /><title>Thank You for Contacting YETP</title></head>
+    <body style="margin:0;padding:0;font-family:Arial,sans-serif;background:#f5f7f5;">
+      <table align="center" width="600" cellpadding="0" cellspacing="0" style="background:#fff;border:1px solid #ddd;margin-top:20px;">
+        <tr><td style="background:linear-gradient(135deg,#052b1c,#0B5D3B);padding:28px 30px;text-align:center;">
+          <h1 style="color:#C9A227;margin:0;font-size:22px;letter-spacing:1px;">YOUTH EMPOWERMENT TRAINING PROGRAM</h1>
+          <p style="color:rgba(255,255,255,0.7);margin:6px 0 0;font-size:13px;">www.yetp.pk</p>
+        </td></tr>
+        <tr><td style="padding:30px;">
+          <h2 style="color:#0B5D3B;margin:0 0 6px;">✅ Message Received!</h2>
+          <p style="font-size:15px;color:#555;margin:0 0 16px;">Dear <strong>${name}</strong>, thank you for reaching out to YETP. We have received your message and will respond within 24 hours.</p>
+          <div style="background:#f8fdf9;border:1px solid #c8e6d4;border-radius:8px;padding:16px 20px;margin-bottom:20px;">
+            <p style="font-size:13px;color:#555;margin:0 0 8px;font-weight:bold;">Your Message Details:</p>
+            <p style="font-size:13px;color:#555;margin:4px 0;"><strong>Subject:</strong> ${subject}</p>
+            <p style="font-size:13px;color:#555;margin:4px 0;"><strong>Message:</strong> ${message}</p>
+            <p style="font-size:13px;color:#555;margin:4px 0;"><strong>Submitted:</strong> ${new Date().toLocaleString()}</p>
+          </div>
+          <div style="background:#fff8e6;border:1px solid #f0d080;border-radius:8px;padding:14px 18px;margin-bottom:20px;">
+            <p style="font-size:13px;color:#7a6010;margin:0;"><strong>📞 Need immediate help?</strong> Call us at 0302-9898082 or 0324-9881887</p>
+          </div>
+          <div style="text-align:center;margin:24px 0;">
+            <a href="https://yetp.pk" style="background:#0B5D3B;color:#fff;padding:12px 28px;text-decoration:none;font-weight:bold;border-radius:6px;display:inline-block;">Visit YETP Website</a>
+          </div>
+          <p style="font-size:14px;color:#888;margin:0;">Thank you for choosing YETP!<br/><strong style="color:#0B5D3B;">Team YETP</strong></p>
+        </td></tr>
+        <tr><td style="background:#0B5D3B;padding:14px;text-align:center;">
+          <p style="color:rgba(255,255,255,0.6);font-size:11px;margin:0;">© ${new Date().getFullYear()} Youth Empowerment Training Program · Lahore, Pakistan</p>
+        </td></tr>
       </table>
-    </body>
-    </html>
+    </body></html>
     `;
 
     const userEmailResult = await sendEmail({
       email: email,
-      subject: "Thank You for Contacting Hunarmand Punjab",
+      subject: "Thank You for Contacting YETP",
       html: userEmailHtml,
       emailType: "contact",
     });
