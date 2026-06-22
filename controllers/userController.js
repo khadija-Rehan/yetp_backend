@@ -89,6 +89,7 @@ exports.generateAndSendPDF = async (req, res) => {
       userName: user.fullName,
       challanNumber: challanNumber,
       amount: amount,
+      psid: psid,
     });
 
     const emailSubject = isSecondEnrollBool

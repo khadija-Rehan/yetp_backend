@@ -1,108 +1,80 @@
-function getTestPassedEmailHtml({
-  userName,
-  testScore,
-  rollNumber,
-  bannerUrl,
-}) {
-  return `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8" />
-      <title>Congratulations! You Have Passed the Admission Test</title>
-    </head>
-    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9f9f9;">
-      <table align="center" width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #ddd; margin-top: 20px;">
-        <tr>
-          <td style="text-align: center;">
-            <img src="https://yetp.pk/images/email_banner.png" alt="YETP" style="width: 100%; max-width: 600px;" />
-          </td>
-        </tr>
-        <tr>
-          <td style="padding: 30px;">
-            <h2 style="color: #28a745;">🎉 Congratulations! You Have Passed the Admission Test</h2>
-            <h3 style="color: #333333;">Now You Are Eligible For YETP Scholarship Card</h3>
-            
-            <p style="font-size: 16px; color: #555555;">
-              Dear <strong>${userName}</strong>,
-            </p>
-            
-            <p style="font-size: 16px; color: #555555;">
-              We are thrilled to inform you that you have successfully cleared the YETP Admission Test. Now you are eligible for a Scholarship Card. To confirm your seat & proceed with your enrolled course. All the courses under the YETP scholarship card are 100% free, but the application processing fee is necessary to complete your application. Your processing fee will be reimbursed if you achieve above 85% Marks in the final evaluation test under the policy of YETP.
-            </p>
+function getTestPassedEmailHtml({ userName, testScore, rollNumber }) {
+  return `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"/><title>Congratulations! You Passed — YETP</title></head>
+<body style="margin:0;padding:0;font-family:Arial,sans-serif;background:#f5f7f5;">
+  <table align="center" width="600" cellpadding="0" cellspacing="0" style="background:#fff;margin-top:20px;border-radius:8px;overflow:hidden;border:1px solid #ddd;">
 
-            <div style="background-color: #f8f9fa; padding: 15px 20px; border-radius: 8px; margin: 15px 0;">
-              <p style="font-size: 15px; color: #555; margin: 0;">
-                <strong>Your Test Score:</strong> <span style="color: #28a745; font-weight: bold;">${testScore}%</span>
-              </p>
-              <p style="font-size: 15px; color: #555; margin: 5px 0 0 0;">
-                <strong>Your Roll Number:</strong> <span style="color: #007bff;">${rollNumber}</span>
-              </p>
-            </div>
+    <!-- Header -->
+    <tr><td style="background:linear-gradient(135deg,#052b1c,#0B5D3B);padding:32px 30px;text-align:center;">
+      <div style="width:56px;height:56px;border-radius:50%;background:rgba(201,162,39,0.2);border:2px solid #C9A227;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;">
+        <span style="font-size:26px;">🎉</span>
+      </div>
+      <h1 style="color:#C9A227;margin:0 0 6px;font-size:20px;letter-spacing:1px;">YOUTH EMPOWERMENT TRAINING PROGRAM</h1>
+      <p style="color:rgba(255,255,255,0.65);margin:0;font-size:12px;letter-spacing:2px;">ADMISSION TEST RESULT</p>
+    </td></tr>
 
-            <div style="background-color: #e9f7ef; border: 1px solid #b2f0c0; padding: 15px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #155724; margin-top: 0;">✅ Benefits of the Scholarship Card:</h3>
-              <ul style="font-size: 14px; color: #155724; padding-left: 20px;">
-                <li>Access to Advanced IT Courses</li>
-                <li>Laptop Scheme</li>
-                <li>Solar Scheme</li>
-                <li>Access to Taleem Finance</li>
-                <li>Access to Study Abroad Free Consultancy</li>
-                <li>Hands-On Learning with Global Curriculum</li>
-                <li>Career Guidance & Freelancing Support</li>
-              </ul>
-            </div>
+    <!-- Score badge -->
+    <tr><td style="background:#0B5D3B;padding:16px 30px;text-align:center;">
+      <span style="display:inline-block;background:rgba(255,255,255,0.12);border:1px solid rgba(201,162,39,0.5);border-radius:40px;padding:8px 28px;">
+        <span style="color:rgba(255,255,255,0.7);font-size:11px;font-weight:bold;letter-spacing:1px;">SCORE </span>
+        <span style="color:#C9A227;font-size:22px;font-weight:900;"> ${testScore}%</span>
+        <span style="color:rgba(255,255,255,0.5);font-size:11px;"> &nbsp;·&nbsp; </span>
+        <span style="background:#C9A227;color:#073d27;font-size:11px;font-weight:900;padding:2px 12px;border-radius:20px;letter-spacing:1px;">PASS ✓</span>
+      </span>
+    </td></tr>
 
-            <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #856404; margin-top: 0;">📋 Next Steps to Claim Your Scholarship Card:</h3>
-              <ol style="font-size: 14px; color: #856404; padding-left: 20px;">
-                <li><strong>Submit the Application Processing Fee:</strong> To Claim your Scholarship Card and confirm your seat, please pay the one-time processing fee of PKR 3250.</li>
-                <li><strong>This fee covers the processing and issuance of your Scholarship Card.</strong></li>
-                <li><strong>All your selected courses are 100% free of cost — there are no tuition fees.</strong></li>
-              </ol>
-            </div>
+    <!-- Body -->
+    <tr><td style="padding:30px;">
+      <p style="font-size:15px;color:#333;margin:0 0 14px;">Dear <strong>${userName}</strong>,</p>
+      <p style="font-size:14px;color:#555;line-height:1.7;margin:0 0 20px;">
+        Congratulations! You have successfully cleared the <strong style="color:#0B5D3B;">YETP Admission Test</strong>.
+        You are now eligible for the <strong>YETP Scholarship Card</strong>.
+        Your Roll Number is <strong style="color:#0B5D3B;">${rollNumber}</strong>.
+      </p>
 
-            <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
-              <h4 style="color: #333333; margin-top: 0;">💳 Important Note:</h4>
-              <p style="font-size: 14px; color: #555; margin: 0;">
-                For Processing Fee & Payment Methods. Login to your account to complete your Scholarship Card Process:
-              </p>
-            </div>
+      <!-- Info box -->
+      <div style="background:#f0f9f4;border:1px solid #c8e6d4;border-radius:8px;padding:16px 20px;margin-bottom:20px;">
+        <p style="font-size:13px;color:#073d27;margin:0 0 8px;font-weight:bold;">✅ Scholarship Card Benefits:</p>
+        <ul style="font-size:13px;color:#0B5D3B;margin:0;padding-left:18px;line-height:1.9;">
+          <li>Access to Advanced IT Courses</li>
+          <li>Laptop Scheme Eligibility</li>
+          <li>Hands-On Global Curriculum</li>
+          <li>Career Guidance &amp; Freelancing Support</li>
+          <li>Guaranteed Internship</li>
+        </ul>
+      </div>
 
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="https://yetp.pk/apply-scholarshipcard" style="background-color: #079560; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px; margin: 10px; display: inline-block;">
-                Scholarship Card Application Form
-              </a>
-            </div>
+      <!-- Next steps -->
+      <div style="background:#fff8e6;border:1px solid #f0d080;border-radius:8px;padding:16px 20px;margin-bottom:20px;">
+        <p style="font-size:13px;color:#7a6010;font-weight:bold;margin:0 0 8px;">📋 Next Step — Pay Processing Fee:</p>
+        <p style="font-size:13px;color:#7a6010;margin:0 0 6px;">To confirm your seat and receive your Scholarship Card, please pay the one-time processing fee:</p>
+        <p style="font-size:22px;font-weight:900;color:#0B5D3B;margin:8px 0 6px;">PKR 3,250</p>
+        <p style="font-size:12px;color:#999;margin:0;">All selected courses are 100% free — this fee covers card processing only.</p>
+      </div>
 
-            <div style="background-color: #e9f7ef; border: 1px solid #b2f0c0; padding: 15px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #155724; margin-top: 0;">✅ What Happens Next:</h3>
-              <ul style="font-size: 14px; color: #155724; padding-left: 20px;">
-                <li>After your Processing Fee is confirmed and your application is approved, Then you will get your Scholarship Card.</li>
-                <li>Under Scholarship Card you are eligible for scholarship card Free laptop Scheme , Solar scheme, Taleem Finance, Study Abroad, & Advance IT Courses.</li>
-                <li>You will receive access to the LMS, where you can begin your learning journey.</li>
-                <li>If your application is not approved for any reason, your processing fee will be fully refunded.</li>
-                <li>After successfully completing your courses, you will receive a certificate and job placement assistance.</li>
-              </ul>
-            </div>
+      <!-- CTA -->
+      <div style="text-align:center;margin:24px 0;">
+        <a href="https://empower-path-eight.vercel.app/admission-result"
+           style="background:#0B5D3B;color:#fff;padding:13px 32px;text-decoration:none;font-weight:bold;font-size:14px;border-radius:6px;display:inline-block;">
+          Login &amp; Generate PSID →
+        </a>
+      </div>
 
-            <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin: 20px 0;">
-              <h4 style="color: #856404; margin-top: 0;">⚠️ Important Note:</h4>
-              <p style="font-size: 14px; color: #856404; margin: 0;">
-                If the fee is not paid, your Scholarship Card will not be issued and your application will be canceled.
-              </p>
-            </div>
+      <p style="font-size:13px;color:#888;line-height:1.6;margin:0;">
+        For help: <a href="mailto:contact@yetp.pk" style="color:#0B5D3B;">contact@yetp.pk</a> &nbsp;|&nbsp; 0302-9898082 &nbsp;|&nbsp; 0324-9881887
+      </p>
+    </td></tr>
 
-            <p style="font-size: 16px; color: #555555;">
-              You're just one step away from receiving your Scholarship Card!<br />
-              <strong>Team YETP</strong>
-            </p>
-          </td>
-        </tr>
-      </table>
-    </body>
-    </html>
-    `;
+    <!-- Footer -->
+    <tr><td style="background:#073d27;padding:14px 30px;text-align:center;">
+      <p style="color:#C9A227;font-size:12px;font-weight:bold;margin:0 0 4px;">Youth Empowerment Training Program</p>
+      <p style="color:rgba(255,255,255,0.5);font-size:11px;margin:0;">Building No 30, Tariq Block, New Garden Town, Lahore &nbsp;·&nbsp; www.yetp.pk</p>
+    </td></tr>
+
+  </table>
+</body>
+</html>`;
 }
 
 module.exports = getTestPassedEmailHtml;
