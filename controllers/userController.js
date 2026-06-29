@@ -96,13 +96,17 @@ exports.generateAndSendPDF = async (req, res) => {
       ? "Your Second Enrollment Challan is Ready - YETP"
       : "Your Challan is Ready - YETP";
 
+    console.log("📧 Sending challan email to:", user.email);
     sendEmail({
       email: user.email,
       subject: emailSubject,
       html: html,
       emailType: "contact",
       attachments: fileName && filePath ? [{ filename: fileName, path: filePath }] : [],
-    }).catch(() => {});
+    }).then((result) => {
+      if (result.success) console.log("✅ Challan email sent to:", user.email);
+      else console.error("❌ Challan email failed:", result.error);
+    }).catch((err) => console.error("❌ Challan email error:", err.message));
 
     return res.status(200).json({
       status: "success",
@@ -167,19 +171,89 @@ exports.updateTestScore = async (req, res) => {
       });
     }
 
-    // Fire email in background — do not await (avoids blocking response)
+    // Auto-generate challan + send email with PDF attached (same as Digikhyber)
     if (updatedUser.testPassed === true) {
-      const testPassedHtml = getTestPassedEmailHtml({
-        userName: updatedUser.fullName,
-        testScore: updatedUser.testScore,
-        rollNumber: updatedUser.rollNumber,
-      });
-      sendEmail({
-        email: updatedUser.email,
-        subject: "Congratulations! You Have Passed the Admission Test – YETP",
-        html: testPassedHtml,
-        emailType: "admissions",
-      }).catch(() => {});
+      (async () => {
+        try {
+          console.log(`[TEST SCORE] User ${updatedUser.email} passed. Auto-generating challan...`);
+          const amount = 3250;
+          let challanNumber = "N/A";
+          let challanPath = null;
+          let challanFileName = null;
+          let psid = null;
+
+          // Check if challan already exists (idempotency)
+          let existingChallan = await Challan.findOne({ userId: updatedUser._id, secondEnrollChallan: false });
+          if (!existingChallan) {
+            // Generate sequential challan ID
+            const lastChallan = await Challan.findOne({ challanId: { $regex: /^\d{5,7}$/ } }).sort({ challanId: -1 }).select("challanId");
+            let nextNum = 10000;
+            if (lastChallan?.challanId) {
+              const p = parseInt(lastChallan.challanId, 10);
+              if (!isNaN(p) && p >= 10000 && p < 10000000) nextNum = p + 1;
+            }
+            const reservedId = String(nextNum);
+            psid = "1000000" + reservedId.padStart(8, "0");
+
+            // Save challan to DB immediately
+            const newChallan = new Challan({
+              userId: updatedUser._id,
+              challanId: reservedId,
+              psid: psid,
+              amount: amount,
+              path: null,
+              secondEnrollChallan: false,
+            });
+            await newChallan.save();
+            console.log(`[TEST SCORE] Challan ${reservedId} saved to DB.`);
+
+            // Generate PDF
+            try {
+              const userCourses = updatedUser.courses || updatedUser.physicalCourses || [];
+              const pdfResult = await generatePDF(updatedUser, amount, userCourses);
+              challanNumber = pdfResult.challanNumber;
+              challanPath = pdfResult.filePath;
+              challanFileName = pdfResult.fileName;
+              newChallan.path = challanPath;
+              await newChallan.save();
+              console.log(`[TEST SCORE] PDF generated: ${challanFileName}`);
+            } catch (pdfErr) {
+              console.error("[TEST SCORE] PDF error:", pdfErr.message);
+              challanNumber = reservedId;
+            }
+          } else {
+            challanNumber = existingChallan.challanId;
+            psid = existingChallan.psid;
+            challanFileName = existingChallan.path ? existingChallan.path.split(/[\/\\]/).pop() : null;
+            challanPath = existingChallan.path || null;
+            console.log(`[TEST SCORE] Using existing challan: ${challanNumber}`);
+          }
+
+          // Send test passed email with challan PDF attached
+          console.log("📧 Sending test passed email to:", updatedUser.email);
+          const testPassedHtml = getTestPassedEmailHtml({
+            userName: updatedUser.fullName,
+            testScore: updatedUser.testScore,
+            rollNumber: updatedUser.rollNumber,
+            challanNumber: challanNumber,
+          });
+
+          const emailOptions = {
+            email: updatedUser.email,
+            subject: "Congratulations! You Have Passed the Admission Test – YETP",
+            html: testPassedHtml,
+            emailType: "admissions",
+            attachments: challanPath && challanFileName ? [{ filename: challanFileName, path: challanPath }] : [],
+          };
+
+          const result = await sendEmail(emailOptions);
+          if (result.success) console.log("✅ Test passed email sent to:", updatedUser.email);
+          else console.error("❌ Test passed email failed:", result.error);
+
+        } catch (err) {
+          console.error("[TEST SCORE] Post-pass process error:", err.message);
+        }
+      })();
     }
 
     return res.status(200).json({

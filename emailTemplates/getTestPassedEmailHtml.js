@@ -1,4 +1,4 @@
-function getTestPassedEmailHtml({ userName, testScore, rollNumber }) {
+function getTestPassedEmailHtml({ userName, testScore, rollNumber, challanNumber }) {
   return `
     <!DOCTYPE html>
     <html>
@@ -30,7 +30,7 @@ function getTestPassedEmailHtml({ userName, testScore, rollNumber }) {
             </p>
 
             <p style="font-size: 16px; color: #555555;">
-              You have successfully cleared the YETP Admission Test with a score of <strong>${testScore}%</strong>. You are now eligible to enroll. Please login to your dashboard and generate your PSID to pay the processing fee and confirm your seat.
+              You have successfully cleared the YETP Admission Test with a score of <strong>${testScore}%</strong>. You are now eligible to enroll. Your challan has been generated and is attached to this email. Please pay the processing fee to confirm your seat.
             </p>
 
             <div style="background-color: #f8f9fa; padding: 15px 20px; border-radius: 8px; margin: 15px 0;">
@@ -41,6 +41,7 @@ function getTestPassedEmailHtml({ userName, testScore, rollNumber }) {
                 <li><strong>Roll Number:</strong> <span style="color: #0B5D3B; font-weight: bold;">${rollNumber}</span></li>
                 <li><strong>Test Score:</strong> <span style="color: #0B5D3B; font-weight: bold;">${testScore}%</span></li>
                 <li><strong>Status:</strong> <span style="color: #0B5D3B; font-weight: bold;">PASSED ✓</span></li>
+                ${challanNumber && challanNumber !== "N/A" ? `<li><strong>Challan Number:</strong> <span style="color: #0B5D3B; font-weight: bold;">${challanNumber}</span></li>` : ""}
                 <li><strong>Processing Fee:</strong> <span style="color: #0B5D3B; font-weight: bold;">PKR 3,250</span></li>
               </ul>
             </div>
